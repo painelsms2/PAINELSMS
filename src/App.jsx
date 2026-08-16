@@ -1,0 +1,58 @@
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import { ToastProvider } from './contexts/ToastContext';
+import ErrorBoundary from './components/ErrorBoundary';
+import LandingPage from './pages/LandingPage';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import PanelLayout from './components/PanelLayout';
+import Servicos from './pages/panel/Servicos';
+import Dashboard from './pages/panel/Dashboard';
+import Carteira from './pages/panel/Carteira';
+import Configuracoes from './pages/panel/Configuracoes';
+import ProtectedRoute from './components/ProtectedRoute';
+import PublicRoute from './components/PublicRoute';
+
+const Placeholder = ({ title }) => (
+  <div className="page-header"><h1 className="page-title">{title}</h1><p className="text-muted">Em breve.</p></div>
+);
+
+function App() {
+  return (
+    <ErrorBoundary>
+      <ToastProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<LandingPage />} />
+              
+              <Route element={<PublicRoute />}>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+              </Route>
+
+              {/* Protected Routes (Panel) */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="/panel" element={<PanelLayout />}>
+                  <Route index element={<Navigate to="/panel/servicos" replace />} />
+                  <Route path="servicos" element={<Servicos />} />
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="carteira" element={<Carteira />} />
+                  <Route path="configuracoes" element={<Configuracoes />} />
+                  <Route path="ajuda" element={<Placeholder title="Ajuda" />} />
+                </Route>
+              </Route>
+
+              {/* Rota 404 */}
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </ToastProvider>
+    </ErrorBoundary>
+  );
+}
+
+export default App;
