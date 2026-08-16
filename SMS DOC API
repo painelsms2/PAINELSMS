@@ -1,0 +1,171 @@
+Visão geral da API
+A Platfone oferece uma variedade de APIs para atender a diferentes casos de uso. Cada API foi projetada para lidar com tarefas específicas, garantindo que você possa escolher a ferramenta certa para suas necessidades.
+
+Esta página ajuda você a entender e comparar as APIs disponíveis para ativações de serviços via SMS usando números de celular temporários.
+
+🧭 Escolhendo a API certa 
+Nome da API	Ideal para	Principais destaques	OpenAPI / Swagger
+API de ativação	Desenvolvedores de aplicativos automatizando ativações de SMS	Simples, confiável e com foco na qualidade; pague somente por SMS recebido.	📖 Documentação da API 🤖 Especificações da API
+API de varejo	Revendedores gerenciando seus próprios clientes e saldos.	Controle total da conta/saldo; desenvolvimento rápido de aplicativos.	📖 Documentação da API 🤖 Especificações da API
+API alternativa	Usuários antigos migrando de outras plataformas de ativação por SMS	Migração rápida com alterações mínimas no código existente.	📖 Documentação da API 🤖 Especificações da API
+🔍 Comparação de APIs 
+Recurso	API de ativação	API de varejo	API alternativa
+Caso de uso	Integre a ativação por SMS ao seu aplicativo.	Crie um aplicativo voltado para o cliente rapidamente	Migre de APIs de SMS legadas
+Gestão do equilíbrio	Somente em nível de projeto	Por cliente e por projeto	Somente em nível de projeto
+Números de pedido	✅	✅ (por cliente)	✅
+Receba SMS/OTP	✅	✅ (por cliente)	✅
+Tentar ativação novamente	✅	✅ (por cliente)	✅
+Cancelar ativação	✅	✅ (por cliente)	✅
+Histórico de ativação	✅	✅ (por cliente)	✅
+Ver saldo	✅	✅ (por cliente)	✅
+Países/Serviços suportados	✅	✅	✅ (limitado a 1 )
+Limite de preço (por ativação)	✅	✅	✅
+Repetir pedido (com novo preço)	✅	✅	❌
+Defina a preferência de qualidade durante o pedido.	✅	✅	❌
+Simplicidade da API	RESTful moderno	RESTful com contexto do cliente	Formato legado GET/POST
+Tempo de integração	Curto	Médio	Curto
+Controle de versões e compatibilidade	Compatível com versões anteriores	Compatível com versões anteriores	Compatível com APIs de SMS legadas
+Política de Faturamento	Somente por SMS recebido	Somente por SMS recebido	Somente por SMS recebido
+Ambiente de Sandbox	✅	✅	✅
+🧪 Cartões de Visão Geral da API 
+🟢 API de ativação 
+Para quem é indicado : Desenvolvedores que precisam de uma API simples para solicitar números temporários e receber códigos SMS.
+
+Por que usar : Integração rápida, foco na qualidade, sem cobrança a menos que o SMS seja recebido.
+
+Principais pontos fortes :
+
+Seleção de números com base em preço/qualidade
+Reembolsos via SMS - endpoint de relatório
+Respostas detalhadas sobre ativação e faturamento
+Ótimo para provedores de software, plataformas ou SaaS.
+Comece a desenvolver com a API de Ativação agora mesmo.
+🔵 API de Varejo 
+Para quem é indicado : Empresas que precisam cadastrar usuários finais, gerenciar saldos de clientes e atuar como revendedoras.
+
+Por que usar : Controle total sobre clientes e saldos com uma pegada de banco de dados quase nula.
+
+Principais pontos fortes :
+
+gerenciamento de saldo multiusuário
+Histórico de transações por cliente
+Ideal para aplicações voltadas ao consumidor.
+Crie seu aplicativo com a API de Varejo.
+🟡 API alternativa 
+Para quem é indicado : Usuários que estão migrando de outros serviços de SMS com APIs legadas.
+
+Por que usar : Estrutura e parâmetros familiares, processo de migração tranquilo.
+
+Principais pontos fortes :
+
+Suporte legado para GET/POST
+Substituição rápida e fácil
+Refatoração mínima para bases de código existentes.
+Migrar para uma API alternativa
+🚀 Como escolher 
+Deseja apenas ativar e receber códigos SMS com facilidade?
+🟢 Use a API de ativação
+
+Criar um produto voltado para o cliente com ativações por SMS?
+🔵 Use a API de Varejo
+
+Já utiliza outro fornecedor de SMS e vai mudar para outro?
+🟡 Usar API alternativa
+
+📘 Ainda não tem certeza? 
+Comece com a API de Ativação se estiver criando um aplicativo ou apenas testando o terreno.
+Use a API de Varejo se estiver criando uma solução para clientes.
+Experimente a API alternativa se sua base de código atual utiliza uma estrutura legada.
+Escolha sua ferramenta
+Explore mais ferramentas disponíveis no Platfone.
+
+A API alternativa oferece suporte a um conjunto limitado de países e serviços em comparação com as outras APIs.  ↩︎
+
+
+
+API de ativação
+📝 Visão geral 
+A API de Ativação foi projetada para automatizar ativações de serviços via SMS usando números de celular temporários. Ela permite solicitar novos números, receber mensagens SMS e códigos OTP, tentar novamente e cancelar ativações em ambientes de teste ou produção. A cobrança só ocorre quando um SMS é recebido com sucesso.
+
+A API de ativação é usada para integrar a ativação por SMS em aplicativos ou serviços, fornecendo uma solução confiável e econômica para gerenciar números de telefone temporários e mensagens SMS. A ativação por SMS é normalmente usada para verificação de contas, controle de qualidade, testes e automação.
+
+🔑 Principais recursos 
+Solicite um número de telefone temporário
+Receba mensagens SMS e códigos OTP enviados para esse número.
+Tentar novamente/Cancelar ativação
+Ver histórico de ativações
+Lista de países apoiados
+Liste os serviços elegíveis
+Preço máximo limite por ativação
+Verificar saldo
+Tratamento detalhado de erros
+Modos de teste e produção
+Cobrança somente mediante SMS recebido.
+📖 Documentação 
+Referência da API de ativação (em linguagem acessível)
+Documentação legível com exemplos.
+
+Especificação OpenAPI (YAML)
+Especificação legível por máquina para geração e automação de código
+
+Dica
+
+Veja suas ativações ativas e históricas no painel de controle da web .
+Utilize o ambiente sandbox para testes sem custos adicionais.
+
+API de varejo
+📝 Visão geral 
+A API de Varejo permite que você incorpore a verificação por SMS em seu próprio aplicativo móvel ou web, enquanto nós gerenciamos clientes, saldos e ativações. Ela oferece endpoints para criar usuários, recarregar saldos, atribuir números de telefone, receber códigos OTP, tentar novamente ou cancelar ativações e rastrear o histórico de uso — tudo com a cobrança acionada somente após o recebimento bem-sucedido do SMS.
+
+🔑 Principais recursos 
+Criar e gerenciar contas de clientes
+Adicionar ou deduzir saldo por cliente
+Solicitar números de telefone temporários
+Criar ativações para clientes
+Recupere o SMS recebido e o código OTP.
+Tentar novamente as ativações de SMS que falharam
+Receba um SMS e um código OTP.
+Obtenha ativações ativas
+Cancelar ativações ativas
+Recuperar histórico de ativação
+Verificar saldo do cliente
+Veja o histórico de transações do cliente.
+Lista de países apoiados
+Liste os serviços elegíveis
+Consulte os preços por país ou serviço.
+Impor um limite máximo de preço por ativação.
+Suporta ambientes de teste e produção.
+Cobrança somente mediante SMS recebido.
+📖 Documentação 
+Referência da API de Varejo (Amigável ao Usuário)
+Documentação legível com exemplos.
+
+Especificação OpenAPI (YAML)
+Especificação legível por máquina para geração e automação de código
+
+Dica
+
+Gerencie seus clientes na seção Varejo do painel de controle da web .
+Utilize o ambiente sandbox para testes sem custos adicionais.
+Nota sobre a taxa de sucesso de clientes de varejo
+
+Podemos suspender contas de clientes de varejo para evitar abusos e garantir o uso justo para todos os clientes. Você pode alterar o status da conta de um cliente no painel de controle. O cliente será notificado por e-mail quando sua conta for suspensa.
+
+
+API alternativa
+📝 Visão geral 
+A API Alternativa oferece uma API compatível com sistemas legados e outros provedores de ativação de SMS. Ela permite solicitar números, consultar códigos SMS, definir limites de preço e verificar saldo por meio de endpoints GET/POST simples.
+
+Esta API foi projetada para usuários que estão migrando de outros provedores, permitindo que eles façam a transição com alterações mínimas em sua integração existente.
+
+🔑 Principais recursos 
+Suporte a endpoints GET/POST legados
+Solicitar números de telefone temporários
+Status do código SMS da pesquisa
+Imposição de teto de preços com preço máximo
+Chave de API passada como api_keyparâmetro
+Formato de resposta numérica V2
+Obtenha o saldo do usuário
+Cobrança somente mediante SMS recebido.
+Modos de teste e produção
+Integração rápida para clientes existentes

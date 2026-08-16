@@ -305,7 +305,8 @@ const Dashboard = () => {
                         const sName = item.serviceName || item.service?.name;
                         const sId = item.serviceId || item.service?.id;
                         const price = item.price || item.service?.price || 0;
-                        const phone = item.phoneNumber || item.number;
+                        const rawPhone = item.phoneNumber || item.number || '';
+                        const phone = rawPhone.includes('|') ? rawPhone.split('|')[1] : rawPhone;
                         const code = item.code || item.smsCode;
                         
                         return (

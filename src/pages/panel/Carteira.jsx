@@ -207,7 +207,13 @@ const Carteira = () => {
                     
                     <div className="qr-code-placeholder mb-4" style={{ position: 'relative' }}>
                       <QrCode size={120} color="var(--border-color)" />
-                      <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${activeCharge.pixCode}`} alt="QR Code Pix" style={{position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', height: '100%', objectFit: 'cover', borderRadius: '8px'}} />
+                      {activeCharge.qrCode && (
+                        <img 
+                          src={activeCharge.qrCode} 
+                          alt="QR Code Pix" 
+                          style={{position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', height: '100%', objectFit: 'cover', borderRadius: '8px', backgroundColor: '#fff'}} 
+                        />
+                      )}
                     </div>
 
                     <div className="pix-code-box mb-4">

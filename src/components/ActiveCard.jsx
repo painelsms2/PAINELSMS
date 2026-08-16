@@ -92,8 +92,8 @@ export const ActiveCard = ({ activation, onComplete, onCancel }) => {
 
   // Format nicely e.g. +55 75 92999-8379
   const formatPhone = (phone) => {
-    // Basic formatting assuming standard br number format in mock
-    return phone; 
+    const rawPhone = phone || '';
+    return rawPhone.includes('|') ? rawPhone.split('|')[1] : rawPhone;
   };
 
   return (
@@ -115,7 +115,7 @@ export const ActiveCard = ({ activation, onComplete, onCancel }) => {
           <div className="ac-phone-number">
             {formatPhone(activation.phoneNumber)}
           </div>
-          <button className="btn-copy-large" onClick={() => copyToClipboard(activation.phoneNumber, 'Número copiado!')}>
+          <button className="btn-copy-large" onClick={() => copyToClipboard(formatPhone(activation.phoneNumber), 'Número copiado!')}>
             <Copy size={20} />
           </button>
         </div>

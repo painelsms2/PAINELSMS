@@ -1,77 +1,147 @@
-const TRANSACTIONS_KEY = 'painelsms_transactions';
-
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-const getInternalTransactions = () => {
-  const data = localStorage.getItem(TRANSACTIONS_KEY);
-  return data ? JSON.parse(data) : [];
-};
-
-const saveTransactions = (transactions) => {
-  localStorage.setItem(TRANSACTIONS_KEY, JSON.stringify(transactions));
-};
+import { supabase } from '../lib/supabase';
 
 export const paymentService = {
   async createPixCharge(amount, userId) {
-    await delay(800);
+    const user = (await supabase.auth.getUser()).data.user;
 
-    const chargeId = `chg_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-    const mockCopyPaste = `00020126580014br.gov.bcb.pix0136mock-pix-key-${chargeId}5204000053039865405${amount}5802BR5911PainelSMS6009Sao Paulo62070503***6304ABCD`;
-    const mockQrCode = `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2Y5ZmFmYiIvPjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzYjgyZjYiIHN0cm9rZS13aWR0aD0iNCIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjE1IiBmaWxsPSIjM2I4MmY2Ii8+PC9zdmc+`;
+    // 1. Chamar a API da Laranjinha
+    const response = await fetch('https://mqvdjjbkjglaimbnpcer.supabase.co/functions/v1/api-proxy/charges', {
+      method: 'POST',
+      headers: {
+        'X-API-Key': import.meta.env.VITE_LARANJINHA_API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        amount_cents: Math.round(amount * 100),
+        description: `Recarga Painel SMS`,
+        payer: {
+          name: user?.user_metadata?.full_name || "Cliente Painel SMS",
+          email: user?.email || "cliente@painelsms.com",
+          document: "00000000000" // CPF Genérico aceito em teste
+        },
+        metadata: {
+          user_id: userId
+        }
+      })
+    });
 
-    const transaction = {
-      id: chargeId,
-      userId,
-      amount,
-      type: 'deposit',
-      description: 'Recarga via Pix',
-      status: 'pending',
-      timestamp: Date.now()
-    };
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error("Erro na API Laranjinha:", errText);
+      throw new Error("Falha ao gerar cobrança com o banco (Gateway Error)");
+    }
 
-    const txs = getInternalTransactions();
-    txs.push(transaction);
-    saveTransactions(txs);
+    const result = await response.json();
+    const charge = result.charge;
 
+    // 2. Inserir a transação 'pending' no Supabase usando o mesmo ID do gateway
+    const { data, error } = await supabase
+      .from('transactions')
+      .insert({
+        id: charge.id, 
+        user_id: userId,
+        type: 'recharge',
+        amount: amount,
+        status: 'pending',
+        method: 'pix'
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error inserting Pix charge in DB:", error);
+      throw new Error("Erro ao salvar cobrança no banco de dados");
+    }
+
+    // 3. Retornar os dados para o frontend desenhar o QR Code
     return {
-      id: chargeId,
-      qrCode: mockQrCode,
-      pixCode: mockCopyPaste,
+      id: charge.id,
+      qrCode: charge.qr_code_image,
+      pixCode: charge.qr_code,
       amount,
       status: 'pending',
-      expiresAt: Date.now() + 10 * 60 * 1000 // 10 mins
+      expiresAt: new Date(charge.expires_at).getTime()
     };
   },
 
   async checkPaymentStatus(chargeId) {
-    await delay(300);
+    try {
+      // Consultar status direto no gateway Laranjinha
+      const response = await fetch(`https://mqvdjjbkjglaimbnpcer.supabase.co/functions/v1/api-proxy/charges/${chargeId}`, {
+        method: 'GET',
+        headers: {
+          'X-API-Key': import.meta.env.VITE_LARANJINHA_API_KEY
+        }
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        const charge = result.charge || result; // Dependendo do formato do GET
+        
+        if (charge.status === 'paid') {
+          // Quando pago, validamos usando a função atômica (RPC) do Supabase
+          const { error } = await supabase.rpc('add_balance', {
+            p_transaction_id: chargeId
+          });
 
-    // Random 20% chance to simulate user paying on each poll
-    const isPaid = Math.random() < 0.2;
+          if (error) {
+             // O erro comum aqui é tentar adicionar de uma transação já concluída, o que é seguro.
+             console.error("Erro ao rodar RPC add_balance:", error);
+             return 'pending'; 
+          }
+          return 'completed';
+        }
+        
+        if (charge.status === 'expired' || charge.status === 'failed') {
+          await this.updateTransactionStatus(chargeId, charge.status);
+          return charge.status;
+        }
+      }
+    } catch (err) {
+      console.error("Error polling payment status:", err);
+    }
 
-    if (isPaid) {
-      return 'completed';
+    // Fallback: se o gateway não responder, consulta o banco local
+    const { data } = await supabase.from('transactions').select('status').eq('id', chargeId).single();
+    if (data && (data.status === 'completed' || data.status === 'expired')) {
+      return data.status;
     }
 
     return 'pending';
   },
 
   async updateTransactionStatus(chargeId, status) {
-    const txs = getInternalTransactions();
-    const index = txs.findIndex(t => t.id === chargeId);
-    if (index !== -1) {
-      txs[index].status = status;
-      if (status === 'completed') {
-        txs[index].completedAt = Date.now();
-      }
-      saveTransactions(txs);
-    }
+    const { error } = await supabase
+      .from('transactions')
+      .update({ status })
+      .eq('id', chargeId);
+    
+    if (error) console.error("Error updating transaction status:", error);
   },
 
   async getTransactions(userId) {
-    await delay(200);
-    return getInternalTransactions()
-      .filter(t => t.userId === userId)
-      .sort((a, b) => b.timestamp - a.timestamp);
+    const { data, error } = await supabase
+      .from('transactions')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error("Error getting transactions:", error);
+      return [];
+    }
+    
+    return data.map(t => ({
+      id: t.id,
+      userId: t.user_id,
+      amount: t.amount,
+      type: t.type === 'recharge' || t.type === 'admin_credit' ? 'deposit' : 'withdrawal',
+      description: t.type === 'recharge' ? 'Recarga via Pix' : 
+                   t.type === 'activation_charge' ? 'Ativação de serviço' : 
+                   t.type === 'admin_credit' ? 'Crédito Administrativo' : t.type,
+      status: t.status === 'paid' ? 'completed' : t.status, // normaliza o "paid"
+      timestamp: new Date(t.created_at).getTime(),
+      completedAt: t.completed_at ? new Date(t.completed_at).getTime() : null
+    }));
   }
 };

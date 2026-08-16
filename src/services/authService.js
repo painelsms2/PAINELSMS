@@ -1,130 +1,124 @@
-// mock API delay
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-const USERS_KEY = 'painelsms_mock_users';
-const SESSION_KEY = 'painelsms_mock_session';
-
-// Helper to get users from localStorage
-const getUsers = () => {
-  const users = localStorage.getItem(USERS_KEY);
-  return users ? JSON.parse(users) : [];
-};
-
-// Helper to save users
-const saveUsers = (users) => {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-};
+import { supabase } from '../lib/supabase'
 
 export const authService = {
   async login(email, password) {
-    await delay(600); // simulate network delay
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-    const users = getUsers();
-    const user = users.find(u => u.email === email && u.password === password); // simple mock validation
-
-    if (!user) {
-      throw new Error('E-mail ou senha inválidos');
+    if (error) {
+      throw new Error(error.message === 'Invalid login credentials' 
+        ? 'E-mail ou senha inválidos' 
+        : error.message);
     }
 
-    const session = {
-      token: `mock-token-${Date.now()}`,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        balance: !user.balance ? 50.00 : user.balance
-      },
-      expiresAt: Date.now() + 1000 * 60 * 60 * 24 // 24 hours
-    };
-
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    return session;
+    return this.getSession();
   },
 
   async register(name, email, password) {
-    await delay(800); // simulate network delay
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name,
+        }
+      }
+    });
 
-    const users = getUsers();
-    const userExists = users.some(u => u.email === email);
-
-    if (userExists) {
-      throw new Error('Este e-mail já está em uso');
+    if (error) {
+      throw new Error(error.message === 'User already registered'
+        ? 'Este e-mail já está em uso'
+        : error.message);
     }
 
-    const newUser = {
-      id: `usr_${Date.now()}`,
-      name,
-      email,
-      password, // storing plaintext just for the mock, NEVER do this in prod
-      balance: 50.00 // initial mock balance
-    };
-
-    saveUsers([...users, newUser]);
-
-    // auto login after register
-    return await this.login(email, password);
+    // Auto login on successful register if email confirmations are disabled
+    // If confirmations are enabled, the user might not have a session yet.
+    if (data.session) {
+      return this.getSession();
+    } else {
+      // Se não retornou sessão, tentar login
+      return this.login(email, password);
+    }
   },
 
   async logout() {
-    await delay(300);
-    localStorage.removeItem(SESSION_KEY);
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
   },
 
-  getSession() {
-    const sessionStr = localStorage.getItem(SESSION_KEY);
-    if (!sessionStr) return null;
+  async getSession() {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error || !session) return null;
 
-    const session = JSON.parse(sessionStr);
-    
-    // Check if expired
-    if (session.expiresAt < Date.now()) {
-      localStorage.removeItem(SESSION_KEY);
+    // Fetch the profile for balance and role
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('balance, role, full_name, email')
+      .eq('id', session.user.id)
+      .single();
+
+    if (profileError) {
+      console.error('Error fetching profile:', profileError);
       return null;
     }
-    
-    if (session.user && !session.user.balance) {
-      session.user.balance = 50.00;
-    }
 
-    return session;
+    return {
+      token: session.access_token,
+      user: {
+        id: session.user.id,
+        name: profile.full_name,
+        email: profile.email || session.user.email,
+        balance: profile.balance,
+        role: profile.role
+      },
+      expiresAt: session.expires_at ? session.expires_at * 1000 : null
+    };
   },
 
-  updateSessionUser(updatedUser) {
-    const sessionStr = localStorage.getItem(SESSION_KEY);
-    if (!sessionStr) return;
+  // Listen to auth changes
+  onAuthStateChange(callback) {
+    return supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        const sessionData = await this.getSession();
+        callback(sessionData);
+      } else if (event === 'SIGNED_OUT') {
+        callback(null);
+      }
+    });
+  },
 
-    const session = JSON.parse(sessionStr);
-    session.user = updatedUser;
-    
-    // Also update in the mock DB so it persists across logins
-    const users = getUsers();
-    const userIndex = users.findIndex(u => u.id === updatedUser.id);
-    if (userIndex !== -1) {
-      users[userIndex] = { ...users[userIndex], ...updatedUser };
-      saveUsers(users);
-    }
-
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  async updateSessionUser(updatedUser) {
+    // This method might not be needed as much since balance is fetched from DB
+    // But we keep it to not break the signature if used for local optimistic updates
+    return true; 
   },
 
   async changePassword(userId, currentPassword, newPassword) {
-    await delay(1000); // Simulate network delay
+    // Supabase updateUser only requires the new password. Re-authentication of current
+    // password requires either calling signInWithPassword first or a backend function.
+    // Let's do a quick re-auth to verify current password safely
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user || user.id !== userId) throw new Error("Usuário não encontrado.");
 
-    const users = getUsers();
-    const userIndex = users.findIndex(u => u.id === userId);
-    
-    if (userIndex === -1) {
-      throw new Error("Usuário não encontrado.");
-    }
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: currentPassword,
+    });
 
-    // Verify current password
-    if (users[userIndex].password !== currentPassword) {
+    if (signInError) {
       throw new Error("Senha atual incorreta");
     }
 
-    // Update password
-    users[userIndex].password = newPassword;
-    saveUsers(users);
+    // Now update password
+    const { error: updateError } = await supabase.auth.updateUser({
+      password: newPassword
+    });
+
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
     
     return true;
   }

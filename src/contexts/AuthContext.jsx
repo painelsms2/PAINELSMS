@@ -9,11 +9,28 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Check session on mount
-    const session = authService.getSession();
-    if (session) {
-      setUser(session.user);
-    }
-    setIsLoading(false);
+    const checkSession = async () => {
+      try {
+        const session = await authService.getSession();
+        if (session) {
+          setUser(session.user);
+        }
+      } catch (err) {
+        console.error("Failed to load session", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    checkSession();
+
+    // Listen to Auth changes globally
+    const { data: authListener } = authService.onAuthStateChange((session) => {
+      setUser(session ? session.user : null);
+    });
+
+    return () => {
+      authListener?.subscription?.unsubscribe();
+    };
   }, []);
 
   const login = async (email, password) => {
