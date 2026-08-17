@@ -148,14 +148,15 @@ BEGIN
   INSERT INTO public.profiles (id, full_name, email, role, balance)
   VALUES (
     new.id, 
-    new.raw_user_meta_data->>'full_name', 
+    COALESCE(new.raw_user_meta_data->>'full_name', ''), 
     new.email, 
     'user', 
     0.00
-  );
+  )
+  ON CONFLICT (id) DO NOTHING;
   RETURN new;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- Trigger attached to auth.users
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
@@ -172,7 +173,7 @@ BEGIN
   SELECT role INTO v_role FROM public.profiles WHERE id = auth.uid();
   RETURN v_role = 'admin';
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 --------------------------------------------------------------------------------
 -- 5. RPCs (Server-side logic)

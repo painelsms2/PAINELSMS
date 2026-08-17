@@ -106,6 +106,7 @@ export const RechargeModal = ({ isOpen, onClose }) => {
       setTimeLeft(10 * 60); // 10 minutes
       setStep(2);
     } catch (error) {
+      console.error("Erro real na geração do Pix no modal:", error);
       addToast("Erro ao gerar Pix. Tente novamente.", "error");
     } finally {
       setIsGenerating(false);

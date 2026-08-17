@@ -83,6 +83,7 @@ const Carteira = () => {
       setActiveCharge(charge);
       setTimeLeft(10 * 60); // 10 minutes
     } catch (error) {
+      console.error("Erro real na geração do Pix:", error);
       addToast("Erro ao gerar Pix. Tente novamente.", "error");
     } finally {
       setIsGeneratingPix(false);
