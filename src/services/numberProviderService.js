@@ -40,7 +40,7 @@ export const numberProviderService = {
   async purchaseNumber(serviceId) {
     const API_URL = import.meta.env.VITE_SMS_API_URL;
     const API_KEY = import.meta.env.VITE_SMS_API_KEY;
-    const serviceCode = SERVICE_CODES[serviceId] || 'ot'; // 'ot' = other
+    const serviceCode = SERVICE_CODES[serviceId] || serviceId;
     const countryCode = '73'; // Brazil
 
     // 1. Solicita o número no fornecedor (SMS24h / SMS-Activate protocol)
