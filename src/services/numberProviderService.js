@@ -38,12 +38,12 @@ export const numberProviderService = {
   },
 
   async purchaseNumber(serviceId) {
-    const API_URL = import.meta.env.VITE_PLATFONE_URL;
-    const API_KEY = import.meta.env.VITE_PLATFONE_API_KEY;
+    const API_URL = import.meta.env.VITE_SMS_API_URL;
+    const API_KEY = import.meta.env.VITE_SMS_API_KEY;
     const serviceCode = SERVICE_CODES[serviceId] || 'ot'; // 'ot' = other
     const countryCode = '73'; // Brazil
 
-    // 1. Solicita o número no fornecedor (Platfone)
+    // 1. Solicita o número no fornecedor (SMS24h / SMS-Activate protocol)
     const url = `${API_URL}?api_key=${API_KEY}&action=getNumber&service=${serviceCode}&country=${countryCode}`;
     
     let externalId, realPhoneNumber;
@@ -61,7 +61,7 @@ export const numberProviderService = {
         throw new Error("Sem números disponíveis no momento no fornecedor.");
       }
     } catch (e) {
-      console.error("Erro ao chamar Platfone:", e);
+      console.error("Erro ao chamar API do fornecedor:", e);
       throw new Error("Falha ao comunicar com o fornecedor.");
     }
 
@@ -108,8 +108,8 @@ export const numberProviderService = {
     }
     
     const externalId = parts[0];
-    const API_URL = import.meta.env.VITE_PLATFONE_URL;
-    const API_KEY = import.meta.env.VITE_PLATFONE_API_KEY;
+    const API_URL = import.meta.env.VITE_SMS_API_URL;
+    const API_KEY = import.meta.env.VITE_SMS_API_KEY;
 
     // 2. Consulta o status do SMS no fornecedor
     try {
@@ -171,8 +171,8 @@ export const numberProviderService = {
 
     if (act && act.phone_number && act.phone_number.includes('|')) {
       const externalId = act.phone_number.split('|')[0];
-      const API_URL = import.meta.env.VITE_PLATFONE_URL;
-      const API_KEY = import.meta.env.VITE_PLATFONE_API_KEY;
+      const API_URL = import.meta.env.VITE_SMS_API_URL;
+      const API_KEY = import.meta.env.VITE_SMS_API_KEY;
       
       // Cancela no fornecedor
       await fetch(`${API_URL}?api_key=${API_KEY}&action=setStatus&status=8&id=${externalId}`).catch(console.error);
