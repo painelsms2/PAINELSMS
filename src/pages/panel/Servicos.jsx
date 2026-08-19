@@ -5,7 +5,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { numberProviderService } from '../../services/numberProviderService';
 import { historyService } from '../../services/historyService';
 import Skeleton from '../../components/ui/Skeleton';
-import { Search, Loader2, Signal, AlertCircle, PlusCircle } from 'lucide-react';
+import { Search, Loader2, Signal, AlertCircle, PlusCircle, LayoutGrid, Users, ShoppingCart, Landmark, Bike, Car, Dices } from 'lucide-react';
 import { ServiceIcon } from '../../components/ServiceIcon';
 import './Servicos.css';
 
@@ -17,10 +17,34 @@ const Servicos = () => {
   
   const [services, setServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeCategory, setActiveCategory] = useState('Todos');
   const [isLoadingServices, setIsLoadingServices] = useState(true);
   
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [purchasingId, setPurchasingId] = useState(null);
+
+  const categories = [
+    { id: 'Todos', label: 'Todos', icon: LayoutGrid },
+    { id: 'Rede Social', label: 'Rede Social', icon: Users },
+    { id: 'E-commerce', label: 'E-commerce', icon: ShoppingCart },
+    { id: 'Banco', label: 'Banco', icon: Landmark },
+    { id: 'Delivery', label: 'Delivery', icon: Bike },
+    { id: 'Transporte', label: 'Transporte', icon: Car },
+    { id: 'Bet', label: 'Bet', icon: Dices }
+  ];
+
+  const categorizeService = (name) => {
+    const n = name.toLowerCase();
+    
+    if (n.includes('facebook') || n.includes('instagram') || n.includes('whatsapp') || n.includes('telegram') || n.includes('tiktok') || n.includes('twitter') || n.includes('tinder') || n.includes('viber') || n.includes('discord')) return 'Rede Social';
+    if (n.includes('mercado') || n.includes('shopee') || n.includes('amazon') || n.includes('olx') || n.includes('privalia') || n.includes('aliexpress') || n.includes('enjoei')) return 'E-commerce';
+    if (n.includes('govbr') || n.includes('picpay') || n.includes('nubank') || n.includes('santander') || n.includes('c6 bank') || n.includes('bitso') || n.includes('pagbank') || n.includes('paypal') || n.includes('agibank') || n.includes('neon') || n.includes('coinbase') || n.includes('asaas') || n.includes('bradesco') || n.includes('next') || n.includes('caixa') || n.includes('binance') || n.includes('getnet') || n.includes('bipa') || n.includes('infinitepay') || n.includes('pay') || n.includes('bank') || n.includes('banco') || n.includes('crypto')) return 'Banco';
+    if (n.includes('ifood') || n.includes('ze') || n.includes('delivery') || n.includes('ultragaz') || n.includes('doordash') || n.includes('burger') || n.includes('glovo') || n.includes('food') || n.includes('mcdonalds') || n.includes('brahma')) return 'Delivery';
+    if (n.includes('99') || n.includes('uber') || n.includes('blabla') || n.includes('didi') || n.includes('guiche') || n.includes('dott') || n.includes('taxi') || n.includes('drive') || n.includes('car')) return 'Transporte';
+    if (n.includes('bet') || n.includes('cassino') || n.includes('aposta') || n.includes('cruzeiro') || n.includes('beboo') || n.includes('winzo') || n.includes('arena') || n.includes('cash')) return 'Bet';
+
+    return 'Outros'; 
+  };
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -81,9 +105,11 @@ const Servicos = () => {
     }
   };
 
-  const filteredServices = services.filter(s => 
-    s.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredServices = services.filter(s => {
+    const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = activeCategory === 'Todos' || categorizeService(s.name) === activeCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <div className="servicos-page">
@@ -103,6 +129,22 @@ const Servicos = () => {
             className="search-input"
           />
         </div>
+      </div>
+
+      <div className="category-filters fade-in">
+        {categories.map(cat => {
+          const Icon = cat.icon;
+          return (
+            <button 
+              key={cat.id} 
+              className={`category-pill ${activeCategory === cat.id ? 'active' : ''}`}
+              onClick={() => setActiveCategory(cat.id)}
+            >
+              <Icon size={16} />
+              {cat.label}
+            </button>
+          );
+        })}
       </div>
 
       {(user?.balance || 0) < 1.50 && (
