@@ -1,7 +1,7 @@
 import { supabase } from '../lib/supabase';
 
 export const paymentService = {
-  async createPixCharge(amount, userId) {
+  async createPixCharge(baseAmount, totalAmount, userId) {
     const user = (await supabase.auth.getUser()).data.user;
 
     // 1. Chamar a API da Laranjinha
@@ -12,7 +12,7 @@ export const paymentService = {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        amount_cents: Math.round(amount * 100),
+        amount_cents: Math.round(totalAmount * 100),
         description: `Recarga Painel SMS`,
         payer: {
           name: user?.user_metadata?.full_name || "Cliente Painel SMS",
@@ -35,13 +35,15 @@ export const paymentService = {
     const charge = result.charge;
 
     // 2. Inserir a transação 'pending' no Supabase usando o mesmo ID do gateway
+    // NOTE: We save `baseAmount` in the database so that when it succeeds, 
+    // the user gets exactly `baseAmount` in their balance, effectively paying the fee.
     const { data, error } = await supabase
       .from('transactions')
       .insert({
         id: charge.id, 
         user_id: userId,
         type: 'recharge',
-        amount: amount,
+        amount: baseAmount,
         status: 'pending',
         method: 'pix'
       })
@@ -58,7 +60,8 @@ export const paymentService = {
       id: charge.id,
       qrCode: charge.qr_code_image,
       pixCode: charge.qr_code,
-      amount,
+      amount: baseAmount,
+      totalAmount: totalAmount,
       status: 'pending',
       expiresAt: new Date(charge.expires_at).getTime()
     };

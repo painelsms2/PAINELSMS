@@ -10,7 +10,7 @@ export const RechargeModal = ({ isOpen, onClose }) => {
   const { addToast } = useToast();
   
   const [step, setStep] = useState(1); // 1: Amount, 2: Pix QR
-  const [amount, setAmount] = useState(50);
+  const [amount, setAmount] = useState(10);
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeCharge, setActiveCharge] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -18,13 +18,13 @@ export const RechargeModal = ({ isOpen, onClose }) => {
   const pollIntervalRef = useRef(null);
   const timerIntervalRef = useRef(null);
 
-  const presets = [5, 20, 50, 100];
+  const presets = [10, 20, 50, 100];
 
   // Reset state when opened
   useEffect(() => {
     if (isOpen) {
       setStep(1);
-      setAmount(50);
+      setAmount(10);
       setIsGenerating(false);
       setActiveCharge(null);
       setTimeLeft(0);
@@ -94,14 +94,15 @@ export const RechargeModal = ({ isOpen, onClose }) => {
   };
 
   const handleConfirmStep1 = async () => {
-    if (amount < 5) {
-      addToast("O valor mínimo é R$ 5,00", "error");
+    if (amount < 10) {
+      addToast("O valor mínimo é R$ 10,00", "error");
       return;
     }
     
     setIsGenerating(true);
     try {
-      const charge = await paymentService.createPixCharge(amount, user.id);
+      const finalAmount = amount + 0.30;
+      const charge = await paymentService.createPixCharge(amount, finalAmount, user.id);
       setActiveCharge(charge);
       setTimeLeft(10 * 60); // 10 minutes
       setStep(2);
@@ -134,7 +135,7 @@ export const RechargeModal = ({ isOpen, onClose }) => {
         {step === 1 && (
           <div className="rm-step fade-in">
             <h2 className="rm-title">Adicionar Saldo</h2>
-            <p className="rm-subtitle">Escolha um valor e recarregue via Pix. O saldo é adicionado automaticamente após a confirmação do pagamento.</p>
+            <p className="rm-subtitle">Escolha um valor e recarregue via Pix. Será aplicada uma taxa de R$ 0,30. O saldo entra na hora após pagamento.</p>
             
             <div className="rm-preset-grid">
               {presets.map(val => (
@@ -155,11 +156,11 @@ export const RechargeModal = ({ isOpen, onClose }) => {
                 className="rm-input" 
                 value={amount}
                 onChange={handleCustomChange}
-                min="5"
+                min="10"
                 placeholder="Ex: 15.50"
               />
               <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem', marginBottom: '1.5rem', textAlign: 'center' }}>
-                Selecione um valor sugerido ou digite um valor personalizado (mínimo R$ 5).
+                Selecione um valor sugerido ou digite um valor personalizado (mínimo R$ 10,00). Taxa Pix de R$ 0,30.
               </p>
             </div>
 
@@ -179,7 +180,10 @@ export const RechargeModal = ({ isOpen, onClose }) => {
         {step === 2 && activeCharge?.status === 'pending' && (
           <div className="rm-step fade-in">
             <h2 className="rm-title text-center">Escaneie o QR Code</h2>
-            <p className="rm-subtitle text-center mb-4">Pague via Pix para adicionar R$ {Number(amount || 0).toFixed(2)}</p>
+            <p className="rm-subtitle text-center mb-4">
+              Pague via Pix para receber <strong>R$ {Number(amount || 0).toFixed(2)}</strong> de saldo.<br/>
+              <small>Total a pagar (com taxa de R$ 0,30): <strong>R$ {(Number(amount || 0) + 0.30).toFixed(2)}</strong></small>
+            </p>
             
             <div className="rm-qr-container" style={{ position: 'relative' }}>
               <QrCode size={180} strokeWidth={1} color="var(--border-color)" />
