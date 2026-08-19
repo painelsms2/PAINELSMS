@@ -8,16 +8,22 @@ export default async function handler(req, res) {
   }
 
   try {
-    let url = `${API_URL}?api_key=${API_KEY}&action=${action}`;
+    // Fix missing protocol if user forgot it
+    let cleanApiUrl = API_URL;
+    if (!cleanApiUrl.startsWith('http://') && !cleanApiUrl.startsWith('https://')) {
+      cleanApiUrl = 'https://' + cleanApiUrl;
+    }
+    
+    // FAILSAFE: sms24h.org blocks .php with Cloudflare. We forcefully remove it if present.
+    if (cleanApiUrl.endsWith('.php')) {
+      cleanApiUrl = cleanApiUrl.slice(0, -4);
+    }
+
+    let url = `${cleanApiUrl}?api_key=${API_KEY}&action=${action}`;
     if (service) url += `&service=${service}`;
     if (country) url += `&country=${country}`;
     if (id) url += `&id=${id}`;
     if (status) url += `&status=${status}`;
-
-    // Fix missing protocol if user forgot it
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      url = 'https://' + url;
-    }
 
     const response = await fetch(url);
     const text = await response.text();
