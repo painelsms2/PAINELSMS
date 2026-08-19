@@ -166,32 +166,44 @@ export const numberProviderService = {
     }));
   },
 
+  async callProvider(params) {
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
+    if (isLocalhost) {
+      const API_URL = import.meta.env.VITE_SMS_API_URL;
+      const API_KEY = import.meta.env.VITE_SMS_API_KEY;
+      const queryParams = new URLSearchParams({ api_key: API_KEY, ...params }).toString();
+      const response = await fetch(`${API_URL}?${queryParams}`);
+      return await response.text();
+    } else {
+      const queryParams = new URLSearchParams(params).toString();
+      const response = await fetch(`/api/proxy?${queryParams}`);
+      if (response.status === 403) throw new Error("Acesso negado pelo proxy");
+      return await response.text();
+    }
+  },
+
   async purchaseNumber(serviceId) {
-    const API_URL = import.meta.env.VITE_SMS_API_URL;
-    const API_KEY = import.meta.env.VITE_SMS_API_KEY;
     const serviceCode = SERVICE_CODES[serviceId] || serviceId;
     const countryCode = '73'; // Brazil
 
     // 1. Solicita o número no fornecedor (SMS24h / SMS-Activate protocol)
-    const url = `${API_URL}?api_key=${API_KEY}&action=getNumber&service=${serviceCode}&country=${countryCode}`;
-    
-    let externalId, realPhoneNumber;
+    let externalId, realPhoneNumber, text;
     try {
-      const response = await fetch(url);
-      const text = await response.text();
-      
-      // Resposta esperada de sucesso: ACCESS_NUMBER:$ID:$NUMBER
-      if (text.startsWith('ACCESS_NUMBER')) {
-        const parts = text.split(':');
-        externalId = parts[1];
-        realPhoneNumber = '+' + parts[2];
-      } else {
-        console.error("Fornecedor não tem números:", text);
-        throw new Error("Sem números disponíveis no momento no fornecedor.");
-      }
+      text = await this.callProvider({ action: 'getNumber', service: serviceCode, country: countryCode });
     } catch (e) {
-      console.error("Erro ao chamar API do fornecedor:", e);
+      console.error("Erro de rede ao chamar API do fornecedor:", e);
       throw new Error("Falha ao comunicar com o fornecedor.");
+    }
+    
+    // Resposta esperada de sucesso: ACCESS_NUMBER:$ID:$NUMBER
+    if (text.startsWith('ACCESS_NUMBER')) {
+      const parts = text.split(':');
+      externalId = parts[1];
+      realPhoneNumber = '+' + parts[2];
+    } else {
+      console.error("Fornecedor não tem números ou retornou erro:", text);
+      throw new Error("Sem números disponíveis no momento no fornecedor.");
     }
 
     // 2. Tenta descontar o saldo e criar a ativação no Supabase via RPC
@@ -203,7 +215,7 @@ export const numberProviderService = {
       console.error("Erro interno ao processar compra:", error);
       
       // Como falhou no nosso banco (saldo insuficiente, etc), devolvemos o número pro fornecedor pra não cobrar
-      await fetch(`${API_URL}?api_key=${API_KEY}&action=setStatus&status=8&id=${externalId}`).catch(console.error);
+      await this.callProvider({ action: 'setStatus', status: 8, id: externalId }).catch(console.error);
       
       if (error.message.includes('Out of stock')) throw new Error("Sem estoque disponível");
       if (error.message.includes('Insufficient balance')) throw new Error("Saldo insuficiente");
@@ -237,13 +249,10 @@ export const numberProviderService = {
     }
     
     const externalId = parts[0];
-    const API_URL = import.meta.env.VITE_SMS_API_URL;
-    const API_KEY = import.meta.env.VITE_SMS_API_KEY;
 
     // 2. Consulta o status do SMS no fornecedor
     try {
-      const response = await fetch(`${API_URL}?api_key=${API_KEY}&action=getStatus&id=${externalId}`);
-      const text = await response.text();
+      const text = await this.callProvider({ action: 'getStatus', id: externalId });
 
       // STATUS_WAIT_CODE: aguardando
       if (text === 'STATUS_WAIT_CODE') {
@@ -298,13 +307,16 @@ export const numberProviderService = {
       .eq('id', activationId)
       .single();
 
-    if (act && act.phone_number && act.phone_number.includes('|')) {
-      const externalId = act.phone_number.split('|')[0];
-      const API_URL = import.meta.env.VITE_SMS_API_URL;
-      const API_KEY = import.meta.env.VITE_SMS_API_KEY;
-      
-      // Cancela no fornecedor
-      await fetch(`${API_URL}?api_key=${API_KEY}&action=setStatus&status=8&id=${externalId}`).catch(console.error);
+    if (act && act.phone_number) {
+      const parts = act.phone_number.split('|');
+      if (parts.length >= 2) {
+        const externalId = parts[0];
+        try {
+          await this.callProvider({ action: 'setStatus', status: 8, id: externalId });
+        } catch (e) {
+          console.error("Falha ao avisar fornecedor do cancelamento:", e);
+        }
+      }
     }
 
     // 2. Cancela no nosso banco de dados (devolve o saldo/estoque)
