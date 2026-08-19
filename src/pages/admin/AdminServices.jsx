@@ -3,7 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { useToast } from '../../contexts/ToastContext';
 import { Search, Loader2, Save } from 'lucide-react';
 import './AdminServices.css';
-import '../AdminUsers.css'; // reaproveitar estilos da tabela
+import './AdminUsers.css'; // reaproveitar estilos da tabela
 
 const AdminServices = () => {
   const { addToast } = useToast();
