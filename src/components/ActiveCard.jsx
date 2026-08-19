@@ -23,7 +23,7 @@ export const ActiveCard = ({ activation, onComplete, onCancel }) => {
   const pollRef = useRef(null);
 
   useEffect(() => {
-    if (status !== 'waiting_sms') return;
+    if (status !== 'waiting') return;
 
     timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
@@ -39,7 +39,7 @@ export const ActiveCard = ({ activation, onComplete, onCancel }) => {
   }, [status]);
 
   useEffect(() => {
-    if (status !== 'waiting_sms') return;
+    if (status !== 'waiting') return;
 
     pollRef.current = setInterval(async () => {
       try {
@@ -157,7 +157,7 @@ export const ActiveCard = ({ activation, onComplete, onCancel }) => {
         </div>
 
         <div className="ac-actions">
-          {!isCompleted && status === 'waiting_sms' && (
+          {!isCompleted && status === 'waiting' && (
             <button className="btn-cancel-card" onClick={handleUserCancel} title="Cancelar Número">
               <X size={18} /> Cancelar
             </button>

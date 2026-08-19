@@ -20,8 +20,6 @@ export const historyService = {
         service:services(id, name, icon_file, sale_price)
       `)
       .eq('user_id', userId)
-      // Only show completed, cancelled, or expired in history
-      .in('status', ['completed', 'cancelled', 'expired'])
       .order('created_at', { ascending: false });
 
     if (error) {

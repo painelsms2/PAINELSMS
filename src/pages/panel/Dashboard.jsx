@@ -44,8 +44,8 @@ const Dashboard = () => {
     try {
       const history = await historyService.getUserHistory(user.id);
       
-      const active = history.filter(h => h.status === 'waiting_sms');
-      const historical = history.filter(h => h.status !== 'waiting_sms').sort((a, b) => {
+      const active = history.filter(h => h.status === 'waiting');
+      const historical = history.filter(h => h.status !== 'waiting').sort((a, b) => {
         const tA = a.timestamp || a.createdAt || 0;
         const tB = b.timestamp || b.createdAt || 0;
         return new Date(tB).getTime() - new Date(tA).getTime();

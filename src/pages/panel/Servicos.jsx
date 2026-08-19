@@ -54,10 +54,15 @@ const Servicos = () => {
     setPurchasingId(service.id);
 
     try {
-      const purchase = await numberProviderService.purchaseNumber(service.id);
+      const res = await numberProviderService.purchaseNumber(service.id);
       
-      // Salva o registro inicial no histórico como waiting_sms
-      historyService.addActivation(user.id, purchase);
+      // Salva o registro inicial no histórico como waiting
+      historyService.addActivation(user.id, {
+        serviceId: service.id,
+        status: 'waiting',
+        phoneNumber: res.phoneNumber,
+        activationId: res.activationId
+      });
       
       addToast('Número gerado! Redirecionando...', 'success');
       

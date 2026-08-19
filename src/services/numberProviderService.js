@@ -261,7 +261,7 @@ export const numberProviderService = {
     // 1. Extrair o ID do fornecedor a partir do formato "ID|Numero"
     const parts = (activation.phoneNumber || '').split('|');
     if (parts.length < 2) {
-      return { status: 'waiting_sms', code: null }; // número falso antigo
+      return { status: 'waiting', code: null }; // número falso antigo
     }
     
     const externalId = parts[0];
@@ -272,7 +272,7 @@ export const numberProviderService = {
 
       // STATUS_WAIT_CODE: aguardando
       if (text === 'STATUS_WAIT_CODE') {
-        return { status: 'waiting_sms', code: null };
+        return { status: 'waiting', code: null };
       }
 
       // STATUS_OK:$CODE: recebido!
@@ -292,7 +292,7 @@ export const numberProviderService = {
 
         if (updateError) {
           console.error("Erro ao atualizar código no banco:", updateError);
-          return { status: 'waiting_sms', code: null };
+          return { status: 'waiting', code: null };
         }
 
         // Cobra a ativação do saldo (função atômica)
@@ -312,7 +312,7 @@ export const numberProviderService = {
       console.error("Erro ao verificar SMS:", e);
     }
 
-    return { status: 'waiting_sms', code: null };
+    return { status: 'waiting', code: null };
   },
 
   async cancelNumber(activationId) {
