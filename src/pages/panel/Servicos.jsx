@@ -10,7 +10,7 @@ import { ServiceIcon } from '../../components/ServiceIcon';
 import './Servicos.css';
 
 const Servicos = () => {
-  const { user } = useAuth();
+  const { user, updateBalance } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
   const { openRechargeModal } = useOutletContext();

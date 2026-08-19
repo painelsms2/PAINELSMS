@@ -238,6 +238,8 @@ export const numberProviderService = {
       throw new Error("Erro ao comprar número no banco de dados.");
     }
 
+    const activation = Array.isArray(data) ? data[0] : data;
+
     // 3. O RPC gera um número falso (porque não conseguimos passar pelo RPC ainda). 
     // Precisamos atualizar com o número real + ID do fornecedor embutido (ID|Numero)
     const combinedPhoneStr = `${externalId}|${realPhoneNumber}`;
@@ -245,15 +247,15 @@ export const numberProviderService = {
     await supabase
       .from('activations')
       .update({ phone_number: combinedPhoneStr })
-      .eq('id', data.id);
+      .eq('id', activation.id);
 
     return {
-      activationId: data.id,
+      activationId: activation.id,
       phoneNumber: combinedPhoneStr,
       service: { id: serviceId },
-      status: data.status,
-      createdAt: new Date(data.created_at).getTime(),
-      expiresAt: new Date(data.expires_at).getTime()
+      status: activation.status,
+      createdAt: new Date(activation.created_at).getTime(),
+      expiresAt: new Date(activation.expires_at).getTime()
     };
   },
 
