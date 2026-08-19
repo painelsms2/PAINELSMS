@@ -6,7 +6,9 @@ const Header = () => {
     <header className="header">
       <div className="container header-container">
         <div className="logo">
-          <Link to="/" className="logo-text">SMSfacil</Link>
+          <Link to="/" className="logo-link">
+            <img src="/logo.png" alt="SMSfacil Logo" className="header-logo-img" />
+          </Link>
         </div>
         
         <nav className="header-nav">
