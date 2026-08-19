@@ -11,6 +11,7 @@ import Servicos from './pages/panel/Servicos';
 import Dashboard from './pages/panel/Dashboard';
 import Carteira from './pages/panel/Carteira';
 import Configuracoes from './pages/panel/Configuracoes';
+import Ajuda from './pages/panel/Ajuda';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
 
@@ -41,7 +42,7 @@ function App() {
                   <Route path="dashboard" element={<Dashboard />} />
                   <Route path="carteira" element={<Carteira />} />
                   <Route path="configuracoes" element={<Configuracoes />} />
-                  <Route path="ajuda" element={<Placeholder title="Ajuda" />} />
+                  <Route path="ajuda" element={<Ajuda />} />
                 </Route>
               </Route>
 
