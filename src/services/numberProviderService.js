@@ -170,16 +170,32 @@ export const numberProviderService = {
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     
     if (isLocalhost) {
-      const API_URL = import.meta.env.VITE_SMS_API_URL;
+      let API_URL = import.meta.env.VITE_SMS_API_URL;
       const API_KEY = import.meta.env.VITE_SMS_API_KEY;
+      if (!API_URL.startsWith('http')) API_URL = 'https://' + API_URL;
+
       const queryParams = new URLSearchParams({ api_key: API_KEY, ...params }).toString();
       const response = await fetch(`${API_URL}?${queryParams}`);
       return await response.text();
     } else {
       const queryParams = new URLSearchParams(params).toString();
       const response = await fetch(`/api/proxy?${queryParams}`);
-      if (response.status === 403) throw new Error("Acesso negado pelo proxy");
-      return await response.text();
+      
+      const data = await response.json();
+      
+      if (!data.success) {
+        throw new Error("Erro no proxy: " + data.error);
+      }
+
+      console.log("[PROXY DEBUG] Status HTTP Fornecedor:", data.providerStatus);
+      console.log("[PROXY DEBUG] Resposta Bruta:", data.text);
+      console.log("[PROXY DEBUG] URL Chamada:", data.maskedUrl);
+
+      if (data.providerStatus === 403) {
+        throw new Error("Fornecedor bloqueou a chamada da Vercel (403 Forbidden).");
+      }
+
+      return data.text;
     }
   },
 
