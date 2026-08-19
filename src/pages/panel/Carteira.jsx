@@ -21,7 +21,7 @@ const Carteira = () => {
   const timerIntervalRef = useRef(null);
   const pollIntervalRef = useRef(null);
 
-  const predefinedAmounts = [20, 50, 100, 200];
+  const predefinedAmounts = [5, 20, 50, 100];
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -72,8 +72,8 @@ const Carteira = () => {
   }, [activeCharge, timeLeft]);
 
   const handleGeneratePix = async () => {
-    if (selectedAmount < 10) {
-      addToast("O valor mínimo é R$ 10,00", "error");
+    if (selectedAmount < 5) {
+      addToast("O valor mínimo é R$ 5,00", "error");
       return;
     }
     
@@ -257,8 +257,8 @@ const Carteira = () => {
                     className="form-input"
                     value={selectedAmount}
                     onChange={(e) => setSelectedAmount(Number(e.target.value))}
-                    min="10"
-                    step="10"
+                    min="5"
+                    step="5"
                   />
                 </div>
 

@@ -18,7 +18,7 @@ export const RechargeModal = ({ isOpen, onClose }) => {
   const pollIntervalRef = useRef(null);
   const timerIntervalRef = useRef(null);
 
-  const presets = [20, 50, 100, 200];
+  const presets = [5, 20, 50, 100];
 
   // Reset state when opened
   useEffect(() => {
@@ -94,8 +94,8 @@ export const RechargeModal = ({ isOpen, onClose }) => {
   };
 
   const handleConfirmStep1 = async () => {
-    if (amount < 10) {
-      addToast("O valor mínimo é R$ 10,00", "error");
+    if (amount < 5) {
+      addToast("O valor mínimo é R$ 5,00", "error");
       return;
     }
     
@@ -155,11 +155,11 @@ export const RechargeModal = ({ isOpen, onClose }) => {
                 className="rm-input" 
                 value={amount}
                 onChange={handleCustomChange}
-                min="10"
+                min="5"
                 placeholder="Ex: 15.50"
               />
               <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem', marginBottom: '1.5rem', textAlign: 'center' }}>
-                Selecione um valor sugerido ou digite um valor personalizado (mínimo R$ 10).
+                Selecione um valor sugerido ou digite um valor personalizado (mínimo R$ 5).
               </p>
             </div>
 
