@@ -56,6 +56,9 @@ const Servicos = () => {
     try {
       const res = await numberProviderService.purchaseNumber(service.id);
       
+      // Deduct balance from user context immediately
+      updateBalance(user.balance - service.price);
+
       // Salva o registro inicial no histórico como waiting
       historyService.addActivation(user.id, {
         serviceId: service.id,

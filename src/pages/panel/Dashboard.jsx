@@ -74,7 +74,7 @@ const Dashboard = () => {
 
   // Handle Complete & Cancel
   const handleActivationComplete = (activation, code) => {
-    updateBalance(user.balance - activation.service.price);
+    // Balance already deducted at purchase. No need to deduct again.
     historyService.updateActivation(activation.activationId, {
       status: 'completed',
       code: code,
@@ -85,6 +85,8 @@ const Dashboard = () => {
   };
 
   const handleActivationCancel = (activation, finalStatus) => {
+    // Refund balance since it was cancelled
+    updateBalance(user.balance + activation.service.price);
     historyService.updateActivation(activation.activationId, {
       status: finalStatus,
       cancelledAt: Date.now()
