@@ -14,6 +14,10 @@ import Configuracoes from './pages/panel/Configuracoes';
 import Ajuda from './pages/panel/Ajuda';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
+import AdminRoute from './components/AdminRoute';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminUsers from './pages/admin/AdminUsers';
+import AdminServices from './pages/admin/AdminServices';
 
 const Placeholder = ({ title }) => (
   <div className="page-header"><h1 className="page-title">{title}</h1><p className="text-muted">Em breve.</p></div>
@@ -43,6 +47,16 @@ function App() {
                   <Route path="carteira" element={<Carteira />} />
                   <Route path="configuracoes" element={<Configuracoes />} />
                   <Route path="ajuda" element={<Ajuda />} />
+                </Route>
+              </Route>
+
+              {/* Admin Routes */}
+              <Route element={<AdminRoute />}>
+                <Route path="/admin" element={<PanelLayout />}>
+                  <Route index element={<Navigate to="/admin/dashboard" replace />} />
+                  <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="usuarios" element={<AdminUsers />} />
+                  <Route path="servicos" element={<AdminServices />} />
                 </Route>
               </Route>
 

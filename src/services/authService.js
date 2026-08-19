@@ -55,13 +55,18 @@ export const authService = {
     // Fetch the profile for balance and role
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('balance, role, full_name, email')
+      .select('balance, role, full_name, email, status')
       .eq('id', session.user.id)
       .single();
 
     if (profileError) {
       console.error('Error fetching profile:', profileError);
       return null;
+    }
+
+    if (profile.status === 'suspended') {
+      await supabase.auth.signOut();
+      throw new Error("Sua conta foi suspensa. Entre em contato com o suporte.");
     }
 
     return {
@@ -71,7 +76,8 @@ export const authService = {
         name: profile.full_name,
         email: profile.email || session.user.email,
         balance: profile.balance,
-        role: profile.role
+        role: profile.role,
+        status: profile.status
       },
       expiresAt: session.expires_at ? session.expires_at * 1000 : null
     };

@@ -65,6 +65,26 @@ const PanelLayout = () => {
             <HelpCircle size={20} />
             <span>Ajuda</span>
           </Link>
+
+          {user?.role === 'admin' && (
+            <>
+              <div style={{ marginTop: '2rem', marginBottom: '0.5rem', paddingLeft: '1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 'bold', letterSpacing: '1px' }}>
+                Administração
+              </div>
+              <Link to="/admin/dashboard" className={`nav-item ${isActive('/admin/dashboard')}`} onClick={closeSidebar}>
+                <LayoutDashboard size={20} />
+                <span>Métricas</span>
+              </Link>
+              <Link to="/admin/usuarios" className={`nav-item ${isActive('/admin/usuarios')}`} onClick={closeSidebar}>
+                <User size={20} />
+                <span>Usuários</span>
+              </Link>
+              <Link to="/admin/servicos" className={`nav-item ${isActive('/admin/servicos')}`} onClick={closeSidebar}>
+                <Settings size={20} />
+                <span>Gestão Serviços</span>
+              </Link>
+            </>
+          )}
         </nav>
       </aside>
 
