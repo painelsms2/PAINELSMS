@@ -89,7 +89,7 @@ const PanelLayout = () => {
             />
 
             <span className="balance-display">
-              R$ {user?.balance?.toFixed(2) || '0.00'}
+              R$ {Number(user?.balance || 0).toFixed(2)}
             </span>
 
             <button className="btn-comprar-credito" onClick={() => setIsModalOpen(true)}>

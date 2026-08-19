@@ -21,8 +21,9 @@ CREATE TABLE public.profiles (
 CREATE TABLE public.services (
   id text PRIMARY KEY,
   name text NOT NULL,
-  icon_key text NOT NULL,
-  price numeric(12,2) NOT NULL,
+  icon_file text,
+  cost_price numeric(12,2) NOT NULL DEFAULT 0.00,
+  sale_price numeric(12,2) NOT NULL DEFAULT 0.00,
   country text DEFAULT 'Brasil',
   stock int DEFAULT 0,
   active boolean DEFAULT true,

@@ -328,7 +328,7 @@ const Dashboard = () => {
                                 </div>
                               ) : <span className="text-muted">-</span>}
                             </td>
-                            <td>R$ {price.toFixed(2)}</td>
+                            <td>R$ {Number(price || 0).toFixed(2)}</td>
                             <td className="text-center">{getStatusFace(item.status)}</td>
                           </tr>
                         );

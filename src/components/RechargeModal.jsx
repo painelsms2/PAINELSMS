@@ -179,7 +179,7 @@ export const RechargeModal = ({ isOpen, onClose }) => {
         {step === 2 && activeCharge?.status === 'pending' && (
           <div className="rm-step fade-in">
             <h2 className="rm-title text-center">Escaneie o QR Code</h2>
-            <p className="rm-subtitle text-center mb-4">Pague via Pix para adicionar R$ {Number(amount).toFixed(2)}</p>
+            <p className="rm-subtitle text-center mb-4">Pague via Pix para adicionar R$ {Number(amount || 0).toFixed(2)}</p>
             
             <div className="rm-qr-container" style={{ position: 'relative' }}>
               <QrCode size={180} strokeWidth={1} color="var(--border-color)" />
@@ -229,7 +229,7 @@ export const RechargeModal = ({ isOpen, onClose }) => {
               <CheckCircle2 size={48} className="text-success" />
             </div>
             <h2 className="rm-title text-center text-success">Pagamento Confirmado!</h2>
-            <p className="rm-subtitle text-center">Seu saldo de R$ {Number(amount).toFixed(2)} foi adicionado.</p>
+            <p className="rm-subtitle text-center">Seu saldo de R$ {Number(amount || 0).toFixed(2)} foi adicionado.</p>
           </div>
         )}
       </div>

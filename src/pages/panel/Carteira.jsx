@@ -100,7 +100,7 @@ const Carteira = () => {
       paymentService.getTransactions(user.id).then(setTransactions);
     });
 
-    addToast(`Recarga de R$ ${activeCharge.amount.toFixed(2)} aprovada!`, 'success');
+    addToast(`Recarga de R$ ${Number(activeCharge.amount || 0).toFixed(2)} aprovada!`, 'success');
     setActiveCharge({ ...activeCharge, status: 'completed' });
     setTimeLeft(0);
   };
@@ -174,7 +174,7 @@ const Carteira = () => {
             </div>
             <div className="balance-amount">
               <span className="currency">R$</span>
-              {user?.balance?.toFixed(2) || '0.00'}
+              {Number(user?.balance || 0).toFixed(2)}
             </div>
           </div>
 
@@ -315,7 +315,7 @@ const Carteira = () => {
                     </div>
                     <div className="tx-amount-col">
                       <span className={`tx-amount ${tx.type}`}>
-                        {tx.type === 'deposit' ? '+' : '-'} R$ {tx.amount.toFixed(2)}
+                        {tx.type === 'deposit' ? '+' : '-'} R$ {Number(tx.amount || 0).toFixed(2)}
                       </span>
                       <span className={`tx-status status-${tx.status}`}>
                         {getStatusIcon(tx.status)} {getStatusText(tx.status)}

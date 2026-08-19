@@ -1,6 +1,8 @@
-import { MessageCircle, Send, Camera, Users, Globe, Music, MessageSquare, Car, Hash, Tv } from 'lucide-react';
+import { useState } from 'react';
 
 export const ServiceIcon = ({ service }) => {
+  const [imgError, setImgError] = useState(false);
+
   const brandColors = {
     WhatsApp: '#25D366',
     Instagram: '#E1306C',
@@ -15,30 +17,24 @@ export const ServiceIcon = ({ service }) => {
     Twitch: '#9146FF',
     Netflix: '#E50914'
   };
-  
-  const icons = {
-    MessageCircle: <MessageCircle size={20} />,
-    Send: <Send size={20} />,
-    Camera: <Camera size={20} />,
-    Facebook: <Users size={20} />,
-    Chrome: <Globe size={20} />,
-    Music: <Music size={20} />,
-    MessageSquare: <MessageSquare size={20} />,
-    Car: <Car size={20} />,
-    Twitter: <Hash size={20} />,
-    Tv: <Tv size={20} />
-  };
 
   const color = brandColors[service.name] || 'var(--primary-color)';
-  const letter = service.name.charAt(0).toUpperCase();
+  const letter = service.name ? service.name.charAt(0).toUpperCase() : '?';
+
+  if (service.icon && !imgError) {
+    return (
+      <img 
+        src={`/img/servicesImg/${service.icon}`} 
+        alt={service.name}
+        onError={() => setImgError(true)}
+        style={{ width: '100%', height: '100%', borderRadius: '14px', objectFit: 'cover', display: 'block' }}
+      />
+    );
+  }
 
   return (
     <div className="service-brand-icon" style={{ '--brand-color': color }}>
-      {icons[service.icon] ? (
-        <div style={{ color: 'white' }}>{icons[service.icon]}</div>
-      ) : (
-        <div className="brand-letter">{letter}</div>
-      )}
+      <div className="brand-letter">{letter}</div>
     </div>
   );
 };

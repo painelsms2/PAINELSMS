@@ -139,7 +139,7 @@ const Servicos = () => {
                     <ServiceIcon service={service} />
                   </div>
                   <div className="service-price">
-                    R$ {service.price.toFixed(2)}
+                    R$ {Number(service.price || 0).toFixed(2)}
                   </div>
                 </div>
                 

@@ -17,7 +17,7 @@ export const historyService = {
       .from('activations')
       .select(`
         *,
-        service:services(id, name, icon_key, price)
+        service:services(id, name, icon_file, sale_price)
       `)
       .eq('user_id', userId)
       // Only show completed, cancelled, or expired in history
@@ -35,7 +35,7 @@ export const historyService = {
       service: {
         id: act.service.id,
         name: act.service.name,
-        icon: act.service.icon_key,
+        icon: act.service.icon_file,
         price: act.price // use historical price
       },
       phoneNumber: act.phone_number,
