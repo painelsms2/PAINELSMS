@@ -69,7 +69,7 @@ export const ActiveCard = ({ activation, onComplete, onCancel }) => {
     clearInterval(pollRef.current);
     setStatus('expired');
     addToast('Tempo expirado.', 'error');
-    await numberProviderService.cancelNumber(activation.service.id);
+    await numberProviderService.cancelNumber(activation.activationId);
     onCancel(activation, 'expired');
   };
 
@@ -78,7 +78,7 @@ export const ActiveCard = ({ activation, onComplete, onCancel }) => {
     clearInterval(pollRef.current);
     setStatus('cancelled');
     addToast('Número cancelado e devolvido ao estoque.', 'info');
-    await numberProviderService.cancelNumber(activation.service.id);
+    await numberProviderService.cancelNumber(activation.activationId);
     onCancel(activation, 'cancelled');
   };
 
