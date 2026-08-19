@@ -41,7 +41,7 @@ const PanelLayout = () => {
         <SidebarCanvas />
         <div className="sidebar-header" style={{ position: 'relative', zIndex: 10 }}>
           <Link to="/panel" className="logo-text" onClick={closeSidebar}>
-            Painel<span style={{ color: 'var(--primary-color)' }}>SMS</span>
+            SMS<span style={{ color: 'var(--primary-color)' }}>facil</span>
           </Link>
           <button className="btn-close-sidebar" onClick={closeSidebar}>
             <X size={24} />

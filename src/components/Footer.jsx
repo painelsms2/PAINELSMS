@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="container">
         <div className="footer-content">
           <div className="footer-brand">
-            <Link to="/" className="logo-text">PainelSMS</Link>
+            <Link to="/" className="logo-text">SMSfacil</Link>
             <p className="footer-description text-muted">
               Sua plataforma segura e confiável para recebimento de códigos SMS virtuais.
             </p>

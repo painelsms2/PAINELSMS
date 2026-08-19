@@ -60,7 +60,7 @@ const Login = () => {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-header">
-          <Link to="/" className="auth-logo">PainelSMS</Link>
+          <Link to="/" className="auth-logo">SMSfacil</Link>
           <h1 className="auth-title">Bem-vindo de volta</h1>
           <p className="auth-subtitle">Faça login para acessar o painel</p>
         </div>
