@@ -102,7 +102,11 @@ const AdminProviders = () => {
           
           if (existing) {
             // Update cost and stock
-            await supabase.from('service_offers').update({ cost_price: svc.price, stock: svc.quantity }).eq('id', existing.id);
+            const payload = { cost_price: svc.price, stock: svc.quantity };
+            if (!existing.price_locked) {
+              payload.sale_price = svc.price * 2;
+            }
+            await supabase.from('service_offers').update(payload).eq('id', existing.id);
             updated++;
           } else {
             // Insert
@@ -111,10 +115,11 @@ const AdminProviders = () => {
               provider_id: provider.id,
               provider_service_code: svc.providerServiceCode,
               cost_price: svc.price,
-              sale_price: 0, // Admin must set manually
+              sale_price: svc.price * 2, // Auto markup x2 initially
               stock: svc.quantity,
               active: false, // Inactive by default for admin review
-              is_default: false
+              is_default: false,
+              price_locked: false
             }]);
             created++;
           }
@@ -310,7 +315,9 @@ const AdminProviders = () => {
                         <td className="font-semibold">{provider.name}</td>
                         <td className="text-muted">{provider.key}</td>
                         <td className="text-muted font-semibold">
-                          {balances[provider.id] !== undefined ? `R$ ${balances[provider.id].toFixed(2)}` : 'N/D'}
+                          {provider.key.toLowerCase().includes('numerovirtual') 
+                            ? <span title="API não possui endpoint de saldo">N/D (sem endpoint)</span>
+                            : balances[provider.id] !== undefined ? `R$ ${balances[provider.id].toFixed(2)}` : 'N/D'}
                         </td>
                         <td>
                           <span className={`status-badge ${provider.active ? 'success' : 'danger'}`}>
