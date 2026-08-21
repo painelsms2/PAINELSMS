@@ -60,30 +60,28 @@ const Servicos = () => {
     fetchServices();
   }, [addToast]);
 
-  const handlePurchase = async (service) => {
+  const handlePurchase = async (service, offer) => {
     const userBalance = user?.balance || 0;
-    // In this new model, we just ensure they have balance, but we only deduct later
-    if (userBalance < service.price) {
+    if (userBalance < offer.sale_price) {
       addToast("Saldo insuficiente para este serviço.", 'error');
       openRechargeModal();
       return;
     }
 
-    if (service.stock <= 0) {
-      addToast("Serviço sem estoque no momento.", 'error');
+    if (offer.stock <= 0) {
+      addToast("Este fornecedor está sem estoque no momento.", 'error');
       return;
     }
 
     setIsPurchasing(true);
-    setPurchasingId(service.id);
+    setPurchasingId(`${service.id}-${offer.id}`);
 
     try {
-      const res = await numberProviderService.purchaseNumber(service.id);
+      const res = await numberProviderService.purchaseNumber(offer, service.id);
       
       // Deduct balance from user context immediately
-      updateBalance(user.balance - service.price);
+      updateBalance(user.balance - offer.sale_price);
 
-      // Salva o registro inicial no histórico como waiting
       historyService.addActivation(user.id, {
         serviceId: service.id,
         status: 'waiting',
@@ -93,7 +91,6 @@ const Servicos = () => {
       
       addToast('Número gerado! Redirecionando...', 'success');
       
-      // Redirect to dashboard where the active activation is managed
       setTimeout(() => {
         navigate('/panel/dashboard');
       }, 500);
@@ -178,18 +175,17 @@ const Servicos = () => {
         ) : filteredServices.length > 0 ? (
           filteredServices.map(service => {
             const userBalance = user?.balance || 0;
-            const canAfford = userBalance >= service.price;
-            const hasStock = service.stock > 0;
-            const isThisLoading = isPurchasing && purchasingId === service.id;
+            const hasAnyOffer = service.offers && service.offers.length > 0;
+            const fromPrice = hasAnyOffer ? service.offers[0].sale_price : 0;
             
             return (
-              <div key={service.id} className={`service-card ${(!canAfford || !hasStock) ? 'disabled' : ''}`}>
+              <div key={service.id} className={`service-card ${!hasAnyOffer ? 'disabled' : ''}`}>
                 <div className="service-card-header">
                   <div className="service-icon-wrapper">
                     <ServiceIcon service={service} />
                   </div>
                   <div className="service-price">
-                    R$ {Number(service.price || 0).toFixed(2)}
+                    {hasAnyOffer ? `a partir de R$ ${Number(fromPrice).toFixed(2)}` : 'Indisponível'}
                   </div>
                 </div>
                 
@@ -197,26 +193,46 @@ const Servicos = () => {
                   <h3 className="service-title">{service.name}</h3>
                   <div className="service-meta">
                     <span className="service-country">{service.country}</span>
-                    <span className={`service-stock ${hasStock ? 'in-stock' : 'out-of-stock'}`}>
-                      <Signal size={12} /> {hasStock ? `${service.stock} unid.` : 'Sem estoque'}
-                    </span>
                   </div>
                 </div>
                 
-                <div className="service-action">
-                  <button 
-                    className="btn btn-primary btn-block buy-btn" 
-                    disabled={!canAfford || !hasStock || isPurchasing}
-                    onClick={() => handlePurchase(service)}
-                  >
-                    {isThisLoading ? <Loader2 size={18} className="spin mx-auto" /> : 'Ativar Número'}
-                  </button>
-                  
-                  {!canAfford && hasStock && (
-                    <div className="service-hint error">Saldo insuficiente</div>
-                  )}
-                  {!hasStock && (
-                    <div className="service-hint error">Estoque esgotado</div>
+                <div className="service-action" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: 'auto' }}>
+                  {!hasAnyOffer ? (
+                    <div className="service-hint error">Sem fornecedores ativos</div>
+                  ) : (
+                    service.offers.map((offer) => {
+                      const canAfford = userBalance >= offer.sale_price;
+                      const hasStock = offer.stock > 0;
+                      const isThisLoading = isPurchasing && purchasingId === `${service.id}-${offer.id}`;
+                      
+                      return (
+                        <div key={offer.id} className="provider-offer-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', padding: '0.5rem', background: 'var(--bg-tertiary)', borderRadius: '8px', opacity: (!hasStock || !canAfford) ? 0.6 : 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1 }}>
+                            {offer.provider.logo_key && (
+                              <img src={`/${offer.provider.logo_key}`} alt={offer.provider.name} style={{ width: 16, height: 16, objectFit: 'contain', borderRadius: '4px' }} onError={(e) => e.target.style.display = 'none'} />
+                            )}
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                              <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-primary)' }}>{offer.provider.name}</span>
+                              <span style={{ fontSize: '0.7rem', color: hasStock ? 'var(--success-color)' : 'var(--danger-color)' }}>
+                                {hasStock ? `${offer.stock} unid.` : 'Esgotado'}
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>R$ {Number(offer.sale_price).toFixed(2)}</span>
+                            <button 
+                              className="btn btn-primary" 
+                              style={{ padding: '0.3rem 0.5rem', minWidth: '40px' }}
+                              disabled={!canAfford || !hasStock || isPurchasing}
+                              onClick={() => handlePurchase(service, offer)}
+                            >
+                              {isThisLoading ? <Loader2 size={14} className="spin mx-auto" /> : '+'}
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })
                   )}
                 </div>
               </div>

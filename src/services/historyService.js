@@ -17,7 +17,7 @@ export const historyService = {
       .from('activations')
       .select(`
         *,
-        service:services(id, name, icon_file, sale_price)
+        service:services(id, name, icon_file)
       `)
       .eq('user_id', userId)
       .order('created_at', { ascending: false });

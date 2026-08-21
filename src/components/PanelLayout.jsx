@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
-import { LogOut, User, Menu, ChevronDown, Smartphone, LayoutDashboard, Settings, HelpCircle, X, Loader2 } from 'lucide-react';
+import { LogOut, User, Menu, ChevronDown, Smartphone, LayoutDashboard, Settings, HelpCircle, X, Loader2, Network } from 'lucide-react';
 import { SidebarCanvas } from './SidebarCanvas';
 import './PanelLayout.css';
 
@@ -82,6 +82,10 @@ const PanelLayout = () => {
               <Link to="/admin/servicos" className={`nav-item ${isActive('/admin/servicos')}`} onClick={closeSidebar}>
                 <Settings size={20} />
                 <span>Gestão Serviços</span>
+              </Link>
+              <Link to="/admin/fornecedores" className={`nav-item ${isActive('/admin/fornecedores')}`} onClick={closeSidebar}>
+                <Network size={20} />
+                <span>Fornecedores</span>
               </Link>
             </>
           )}

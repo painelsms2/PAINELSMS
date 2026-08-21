@@ -147,7 +147,13 @@ export const numberProviderService = {
   async getAvailableServices() {
     const { data, error } = await supabase
       .from('services')
-      .select('*')
+      .select(`
+        id, name, country, icon_file, active,
+        offers:service_offers(
+          id, sale_price, stock, provider_service_code, is_default, active,
+          provider:providers(id, name, logo_key, active)
+        )
+      `)
       .eq('active', true)
       .order('name');
     
@@ -156,197 +162,89 @@ export const numberProviderService = {
       throw new Error("Erro ao carregar serviços");
     }
 
-    return data.map(s => ({
-      id: s.id,
-      name: s.name,
-      price: s.sale_price || s.price, // Fallback if sale_price is empty in DB
-      country: s.country,
-      icon: s.icon_file,
-      stock: s.stock
-    }));
+    // Filter active offers and providers in JS, format the final array
+    return data.map(s => {
+      const activeOffers = (s.offers || []).filter(o => o.active && o.provider && o.provider.active);
+      // Sort offers by default first, then lowest price
+      activeOffers.sort((a, b) => {
+        if (a.is_default && !b.is_default) return -1;
+        if (!a.is_default && b.is_default) return 1;
+        return a.sale_price - b.sale_price;
+      });
+
+      return {
+        id: s.id,
+        name: s.name,
+        country: s.country,
+        icon: s.icon_file,
+        offers: activeOffers
+      };
+    });
   },
 
-  async callProvider(params) {
+  async invokeProvider(action, payload = {}) {
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     
-    if (isLocalhost) {
-      let API_URL = import.meta.env.VITE_SMS_API_URL;
-      const API_KEY = import.meta.env.VITE_SMS_API_KEY;
-      if (!API_URL.startsWith('http')) API_URL = 'https://' + API_URL;
+    // Auth token is required to hit our secure API
+    const session = await supabase.auth.getSession();
+    const token = session.data.session?.access_token;
+    
+    if (!token) throw new Error("Usuário não autenticado");
 
-      const queryParams = new URLSearchParams({ api_key: API_KEY, ...params }).toString();
-      const response = await fetch(`${API_URL}?${queryParams}`);
-      return await response.text();
-    } else {
-      const queryParams = new URLSearchParams(params).toString();
-      const response = await fetch(`/api/proxy?${queryParams}`);
-      
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error("Erro no proxy: " + data.error);
-      }
-
-      console.log("[PROXY DEBUG] Status HTTP Fornecedor:", data.providerStatus);
-      console.log("[PROXY DEBUG] Resposta Bruta:", data.text);
-      console.log("[PROXY DEBUG] URL Chamada:", data.maskedUrl);
-
-      if (data.providerStatus === 403) {
-        throw new Error("Fornecedor bloqueou a chamada da Vercel (403 Forbidden).");
-      }
-
-      return data.text;
+    const endpoint = isLocalhost ? 'http://localhost:3000/api/provider' : '/api/provider';
+    
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ action, ...payload })
+    });
+    
+    const data = await response.json();
+    if (!data.success) {
+      throw new Error(data.error || "Erro no servidor do fornecedor");
     }
+    
+    return data;
   },
 
-  async purchaseNumber(serviceId) {
-    const serviceCode = SERVICE_CODES[serviceId] || serviceId;
-    const countryCode = '73'; // Brazil
-
-    // 1. Solicita o número no fornecedor (SMS24h / SMS-Activate protocol)
-    let externalId, realPhoneNumber, text;
+  async purchaseNumber(offer, serviceId) {
     try {
-      text = await this.callProvider({ action: 'getNumber', service: serviceCode, country: countryCode });
+      const { activation } = await this.invokeProvider('buyNumber', { offerId: offer.id });
+      
+      return {
+        activationId: activation.id,
+        phoneNumber: activation.phone_number,
+        service: { id: serviceId },
+        status: activation.status,
+        createdAt: new Date(activation.created_at).getTime(),
+        expiresAt: new Date(activation.expires_at).getTime()
+      };
     } catch (e) {
-      console.error("Erro de rede ao chamar API do fornecedor:", e);
-      throw new Error("Falha ao comunicar com o fornecedor.");
+      console.error("Erro ao comprar número:", e);
+      throw new Error(e.message || "Erro ao comprar número");
     }
-    
-    // Resposta esperada de sucesso: ACCESS_NUMBER:$ID:$NUMBER
-    if (text.startsWith('ACCESS_NUMBER')) {
-      const parts = text.split(':');
-      externalId = parts[1];
-      realPhoneNumber = '+' + parts[2];
-    } else {
-      console.error("Fornecedor não tem números ou retornou erro:", text);
-      throw new Error("Sem números disponíveis no momento no fornecedor.");
-    }
-
-    // 2. Tenta descontar o saldo e criar a ativação no Supabase via RPC
-    const { data, error } = await supabase.rpc('purchase_number', {
-      p_service_id: serviceId
-    });
-
-    if (error) {
-      console.error("Erro interno ao processar compra:", error);
-      
-      // Como falhou no nosso banco (saldo insuficiente, etc), devolvemos o número pro fornecedor pra não cobrar
-      await this.callProvider({ action: 'setStatus', status: 8, id: externalId }).catch(console.error);
-      
-      if (error.message.includes('Out of stock')) throw new Error("Sem estoque disponível");
-      if (error.message.includes('Insufficient balance')) throw new Error("Saldo insuficiente");
-      throw new Error("Erro ao comprar número no banco de dados.");
-    }
-
-    const activation = Array.isArray(data) ? data[0] : data;
-
-    // 3. O RPC gera um número falso (porque não conseguimos passar pelo RPC ainda). 
-    // Precisamos atualizar com o número real + ID do fornecedor embutido (ID|Numero)
-    const combinedPhoneStr = `${externalId}|${realPhoneNumber}`;
-    
-    await supabase
-      .from('activations')
-      .update({ phone_number: combinedPhoneStr })
-      .eq('id', activation.id);
-
-    return {
-      activationId: activation.id,
-      phoneNumber: combinedPhoneStr,
-      service: { id: serviceId },
-      status: activation.status,
-      createdAt: new Date(activation.created_at).getTime(),
-      expiresAt: new Date(activation.expires_at).getTime()
-    };
   },
 
   async checkForSms(activation) {
-    // 1. Extrair o ID do fornecedor a partir do formato "ID|Numero"
-    const parts = (activation.phoneNumber || '').split('|');
-    if (parts.length < 2) {
-      return { status: 'waiting', code: null }; // número falso antigo
-    }
-    
-    const externalId = parts[0];
-
-    // 2. Consulta o status do SMS no fornecedor
     try {
-      const text = await this.callProvider({ action: 'getStatus', id: externalId });
-
-      // STATUS_WAIT_CODE: aguardando
-      if (text === 'STATUS_WAIT_CODE') {
-        return { status: 'waiting', code: null };
-      }
-
-      // STATUS_OK:$CODE: recebido!
-      if (text.startsWith('STATUS_OK')) {
-        const code = text.split(':')[1];
-
-        // Atualiza nosso banco
-        const { error: updateError } = await supabase
-          .from('activations')
-          .update({ 
-            sms_code: code, 
-            status: 'completed',
-            completed_at: new Date().toISOString()
-          })
-          .eq('id', activation.activationId)
-          .eq('status', 'waiting');
-
-        if (updateError) {
-          console.error("Erro ao atualizar código no banco:", updateError);
-          return { status: 'waiting', code: null };
-        }
-
-        // Cobra a ativação do saldo (função atômica)
-        await supabase.rpc('charge_activation', {
-          p_activation_id: activation.activationId
-        });
-
-        return { status: 'completed', code };
-      }
-
-      // STATUS_CANCEL: Fornecedor cancelou o número (timeout ou erro deles)
-      if (text === 'STATUS_CANCEL') {
-        await this.cancelNumber(activation.activationId);
-        return { status: 'cancelled', code: null };
-      }
+      const res = await this.invokeProvider('checkSms', { activationId: activation.activationId });
+      return { status: res.status, code: res.code || null };
     } catch (e) {
       console.error("Erro ao verificar SMS:", e);
+      return { status: 'waiting', code: null };
     }
-
-    return { status: 'waiting', code: null };
   },
 
   async cancelNumber(activationId) {
-    // 1. Primeiro precisamos pegar o external_id para cancelar no fornecedor
-    const { data: act } = await supabase
-      .from('activations')
-      .select('phone_number')
-      .eq('id', activationId)
-      .single();
-
-    if (act && act.phone_number) {
-      const parts = act.phone_number.split('|');
-      if (parts.length >= 2) {
-        const externalId = parts[0];
-        try {
-          await this.callProvider({ action: 'setStatus', status: 8, id: externalId });
-        } catch (e) {
-          console.error("Falha ao avisar fornecedor do cancelamento:", e);
-        }
-      }
-    }
-
-    // 2. Cancela no nosso banco de dados (devolve o saldo/estoque)
-    const { error } = await supabase.rpc('cancel_activation', {
-      p_activation_id: activationId
-    });
-
-    if (error) {
-      console.error("Cancel error:", error);
+    try {
+      await this.invokeProvider('cancel', { activationId });
+      return { status: 'cancelled' };
+    } catch (e) {
+      console.error("Cancel error:", e);
       throw new Error("Erro ao cancelar número");
     }
-
-    return { status: 'cancelled' };
   }
 };

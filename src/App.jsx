@@ -18,6 +18,7 @@ import AdminRoute from './components/AdminRoute';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminServices from './pages/admin/AdminServices';
+import AdminProviders from './pages/admin/AdminProviders';
 
 const Placeholder = ({ title }) => (
   <div className="page-header"><h1 className="page-title">{title}</h1><p className="text-muted">Em breve.</p></div>
@@ -57,6 +58,7 @@ function App() {
                   <Route path="dashboard" element={<AdminDashboard />} />
                   <Route path="usuarios" element={<AdminUsers />} />
                   <Route path="servicos" element={<AdminServices />} />
+                  <Route path="fornecedores" element={<AdminProviders />} />
                 </Route>
               </Route>
 

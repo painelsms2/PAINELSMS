@@ -1,0 +1,560 @@
+{
+  "73": {
+    "bqr": {
+      "cost": 0.5,
+      "count": 490058
+    },
+    "baa": {
+      "cost": 0.7,
+      "count": 490186
+    },
+    "aor": {
+      "cost": 0.7,
+      "count": 490182
+    },
+    "ya": {
+      "cost": 0.2,
+      "count": 490186
+    },
+    "baj": {
+      "cost": 0.6,
+      "count": 490184
+    },
+    "ht": {
+      "cost": 0.3,
+      "count": 490130
+    },
+    "aoz": {
+      "cost": 0.63,
+      "count": 482880
+    },
+    "ccl": {
+      "cost": 1,
+      "count": 488542
+    },
+    "hx": {
+      "cost": 0.8,
+      "count": 490175
+    },
+    "apb": {
+      "cost": 0.65,
+      "count": 490186
+    },
+    "yl": {
+      "cost": 0.5,
+      "count": 488834
+    },
+    "ccu": {
+      "cost": 1,
+      "count": 470949
+    },
+    "axm": {
+      "cost": 1,
+      "count": 490025
+    },
+    "ahb": {
+      "cost": 1,
+      "count": 490170
+    },
+    "yu": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "ie": {
+      "cost": 0.5,
+      "count": 477178
+    },
+    "yw": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "ig": {
+      "cost": 0.64,
+      "count": 406047
+    },
+    "qq": {
+      "cost": 0.5,
+      "count": 465136
+    },
+    "ij": {
+      "cost": 0.8,
+      "count": 490169
+    },
+    "ik": {
+      "cost": 0.25,
+      "count": 490186
+    },
+    "ad": {
+      "cost": 0.4,
+      "count": 490186
+    },
+    "ahi": {
+      "cost": 0.65,
+      "count": 490186
+    },
+    "qv": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "iq": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "am": {
+      "cost": 0.7,
+      "count": 6057
+    },
+    "bbl": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "zh": {
+      "cost": 0.5,
+      "count": 490028
+    },
+    "rb": {
+      "cost": 0.35,
+      "count": 490186
+    },
+    "bsa": {
+      "cost": 0.65,
+      "count": 490186
+    },
+    "ayk": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "re": {
+      "cost": 1,
+      "count": 489488
+    },
+    "ax": {
+      "cost": 0.35,
+      "count": 490183
+    },
+    "aaa": {
+      "cost": 1.2,
+      "count": 53193
+    },
+    "aim": {
+      "cost": 0.7,
+      "count": 490186
+    },
+    "aqt": {
+      "cost": 0.7,
+      "count": 490098
+    },
+    "aiu": {
+      "cost": 0.65,
+      "count": 490182
+    },
+    "bo": {
+      "cost": 0.5,
+      "count": 490067
+    },
+    "sa": {
+      "cost": 0.7,
+      "count": 400606
+    },
+    "arf": {
+      "cost": 0.5,
+      "count": 487568
+    },
+    "ka": {
+      "cost": 0.8,
+      "count": 458076
+    },
+    "arg": {
+      "cost": 0.61,
+      "count": 490186
+    },
+    "sm": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "btm": {
+      "cost": 0.6,
+      "count": 490162
+    },
+    "sn": {
+      "cost": 0.7,
+      "count": 460224
+    },
+    "aje": {
+      "cost": 0.7,
+      "count": 490186
+    },
+    "btn": {
+      "cost": 0.6,
+      "count": 172751
+    },
+    "ki": {
+      "cost": 0.8,
+      "count": 404530
+    },
+    "aba": {
+      "cost": 1,
+      "count": 489048
+    },
+    "abd": {
+      "cost": 1,
+      "count": 490186
+    },
+    "abf": {
+      "cost": 0.64,
+      "count": 490186
+    },
+    "abh": {
+      "cost": 0.54,
+      "count": 488683
+    },
+    "sy": {
+      "cost": 0.6,
+      "count": 490186
+    },
+    "abg": {
+      "cost": 0.4,
+      "count": 431137
+    },
+    "abj": {
+      "cost": 0.55,
+      "count": 490140
+    },
+    "kt": {
+      "cost": 0.5,
+      "count": 490000
+    },
+    "cq": {
+      "cost": 1.3,
+      "count": 37743
+    },
+    "ky": {
+      "cost": 0.35,
+      "count": 490179
+    },
+    "tg": {
+      "cost": 4,
+      "count": 434181
+    },
+    "bdw": {
+      "cost": 0.7,
+      "count": 490186
+    },
+    "th": {
+      "cost": 0.7,
+      "count": 490186
+    },
+    "lf": {
+      "cost": 0.6,
+      "count": 272484
+    },
+    "asl": {
+      "cost": 0.4,
+      "count": 490186
+    },
+    "li": {
+      "cost": 0.4,
+      "count": 489977
+    },
+    "lj": {
+      "cost": 0.7,
+      "count": 254051
+    },
+    "beh": {
+      "cost": 0.5,
+      "count": 490185
+    },
+    "gmsg": {
+      "cost": 1,
+      "count": 490186
+    },
+    "ua": {
+      "cost": 0.55,
+      "count": 487496
+    },
+    "dp": {
+      "cost": 0.5,
+      "count": 490163
+    },
+    "ub": {
+      "cost": 0.8,
+      "count": 350077
+    },
+    "dr": {
+      "cost": 0.5,
+      "count": 479885
+    },
+    "ds": {
+      "cost": 0.4,
+      "count": 393012
+    },
+    "mb": {
+      "cost": 0.12,
+      "count": 410895
+    },
+    "alb": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "me": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "alc": {
+      "cost": 0.7,
+      "count": 490186
+    },
+    "bfa": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "eb": {
+      "cost": 0.3,
+      "count": 490186
+    },
+    "uy": {
+      "cost": 0.1,
+      "count": 490186
+    },
+    "em": {
+      "cost": 0.25,
+      "count": 487238
+    },
+    "ep": {
+      "cost": 0.5,
+      "count": 489606
+    },
+    "vc": {
+      "cost": 0.3,
+      "count": 487938
+    },
+    "auc": {
+      "cost": 0.3,
+      "count": 482155
+    },
+    "vg": {
+      "cost": 0.3,
+      "count": 486214
+    },
+    "ev": {
+      "cost": 1,
+      "count": 182384
+    },
+    "vi": {
+      "cost": 0.1,
+      "count": 199180
+    },
+    "vk": {
+      "cost": 0.5,
+      "count": 490068
+    },
+    "nf": {
+      "cost": 0.5,
+      "count": 490161
+    },
+    "vp": {
+      "cost": 0.55,
+      "count": 466257
+    },
+    "fb": {
+      "cost": 0.8,
+      "count": 118363
+    },
+    "vs": {
+      "cost": 0.65,
+      "count": 490186
+    },
+    "fd": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "bwv": {
+      "cost": 1,
+      "count": 488659
+    },
+    "aml": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "fh": {
+      "cost": 0.55,
+      "count": 490186
+    },
+    "bgj": {
+      "cost": 1,
+      "count": 490006
+    },
+    "auz": {
+      "cost": 0.8,
+      "count": 490186
+    },
+    "nv": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "wa": {
+      "cost": 8,
+      "count": 8229
+    },
+    "amv": {
+      "cost": 1,
+      "count": 490186
+    },
+    "wb": {
+      "cost": 0.5,
+      "count": 1299
+    },
+    "fu": {
+      "cost": 0.4,
+      "count": 489914
+    },
+    "fx": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "aey": {
+      "cost": 0.45,
+      "count": 398853
+    },
+    "aex": {
+      "cost": 0.45,
+      "count": 476147
+    },
+    "ana": {
+      "cost": 1,
+      "count": 485315
+    },
+    "bxj": {
+      "cost": 1,
+      "count": 490186
+    },
+    "cau": {
+      "cost": 1,
+      "count": 490186
+    },
+    "aez": {
+      "cost": 1,
+      "count": 489408
+    },
+    "oi": {
+      "cost": 0.67,
+      "count": 459143
+    },
+    "avp": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "wr": {
+      "cost": 0.7,
+      "count": 398687
+    },
+    "ok": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "om": {
+      "cost": 0.2,
+      "count": 490186
+    },
+    "gf": {
+      "cost": 1,
+      "count": 490186
+    },
+    "ann": {
+      "cost": 0.4,
+      "count": 490123
+    },
+    "aff": {
+      "cost": 0.8,
+      "count": 305968
+    },
+    "afe": {
+      "cost": 0.5,
+      "count": 489400
+    },
+    "ot": {
+      "cost": 1,
+      "count": 43103
+    },
+    "avy": {
+      "cost": 0.5,
+      "count": 486830
+    },
+    "bxz": {
+      "cost": 1,
+      "count": 490186
+    },
+    "go": {
+      "cost": 1,
+      "count": 68660
+    },
+    "gp": {
+      "cost": 1,
+      "count": 165815
+    },
+    "efi": {
+      "cost": 1,
+      "count": 490027
+    },
+    "anx": {
+      "cost": 0.64,
+      "count": 431571
+    },
+    "anw": {
+      "cost": 0.65,
+      "count": 489995
+    },
+    "afr": {
+      "cost": 0.64,
+      "count": 429940
+    },
+    "afq": {
+      "cost": 0.65,
+      "count": 490151
+    },
+    "any": {
+      "cost": 0.6,
+      "count": 490186
+    },
+    "afs": {
+      "cost": 0.61,
+      "count": 490169
+    },
+    "awg": {
+      "cost": 1,
+      "count": 490186
+    },
+    "xj": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "awh": {
+      "cost": 0.5,
+      "count": 490186
+    },
+    "pd": {
+      "cost": 0.65,
+      "count": 437421
+    },
+    "pf": {
+      "cost": 0.5,
+      "count": 490183
+    },
+    "bqh": {
+      "cost": 0.6,
+      "count": 490186
+    },
+    "hb": {
+      "cost": 0.4,
+      "count": 490185
+    },
+    "aom": {
+      "cost": 0.6,
+      "count": 490186
+    },
+    "aol": {
+      "cost": 0.8,
+      "count": 490186
+    }
+  }
+}
