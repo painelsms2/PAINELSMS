@@ -54,10 +54,14 @@ const Sms24hAdapter = {
 
   async listServices(country = '73') {
     const text = await this.request({ action: 'getPrices', country });
+    console.log(`[SMS24H_SYNC] Raw response length: ${text.length}, text start: ${text.substring(0, 100)}`);
     try {
       const data = JSON.parse(text);
       const countryData = data[country];
-      if (!countryData) throw new Error("Country data not found in response");
+      if (!countryData) {
+        console.log(`[SMS24H_SYNC] Country ${country} not found in response keys: ${Object.keys(data)}`);
+        throw new Error("Country data not found in response");
+      }
       
       const services = [];
       for (const [code, info] of Object.entries(countryData)) {
@@ -69,9 +73,10 @@ const Sms24hAdapter = {
           services.push({ providerServiceCode: code, price, quantity });
         }
       }
+      console.log(`[SMS24H_SYNC] Parsed ${services.length} offers successfully.`);
       return services;
     } catch (e) {
-      console.error('SMS24H Parse Error:', e, 'Raw Response:', text);
+      console.error('[SMS24H_SYNC] Parse Error:', e, 'Raw Response:', text.substring(0, 500));
       throw new Error(`SMS24H Error: ${text}`);
     }
   },
