@@ -90,6 +90,8 @@ const NumeroVirtualAdapter = {
   baseUrl: 'https://v3.numero-virtual.app/api',
 
   async request(endpoint, method = 'GET', body = null) {
+    console.log(`[NumeroVirtual Adapter] API Key defined: ${!!NUMEROVIRTUAL_API_KEY}, length: ${NUMEROVIRTUAL_API_KEY ? NUMEROVIRTUAL_API_KEY.length : 0}`);
+    
     const opts = {
       method,
       headers: { 'api-key': NUMEROVIRTUAL_API_KEY, 'Content-Type': 'application/json' }
