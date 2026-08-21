@@ -60,7 +60,7 @@ const Sms24hAdapter = {
       if (!countryData) return [];
       
       const services = [];
-      for (const [code, info] = Object.entries(countryData)) {
+      for (const [code, info] of Object.entries(countryData)) {
         // info is like: { price: qty, ... }
         const priceKeys = Object.keys(info);
         if (priceKeys.length > 0) {
