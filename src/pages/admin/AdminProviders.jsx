@@ -87,13 +87,22 @@ const AdminProviders = () => {
       let created = 0;
       let updated = 0;
 
+      let matchCount = 0;
+      let newCount = 0;
+
       for (const svc of data.services) {
         // Try to find matching local service
-        let localSvc = ourServices.find(s => 
-          s.id === svc.providerServiceCode || 
-          (s.icon_file && s.icon_file.replace('0.png', '') === svc.providerServiceCode) ||
-          (svc.name && s.name.toLowerCase() === svc.name.toLowerCase())
-        );
+        let localSvc = ourServices.find(s => {
+          if (s.id === svc.providerServiceCode) return true;
+          if (svc.name && s.name && s.name.toLowerCase() === svc.name.toLowerCase()) return true;
+          
+          // Fallback: match by icon prefix (e.g. 'wa0.png' -> 'wa')
+          if (s.icon_file) {
+            const prefix = s.icon_file.replace(/0\.png$|\.png$/, '');
+            if (prefix === svc.providerServiceCode) return true;
+          }
+          return false;
+        });
         
         if (!localSvc) {
           // Create the missing service dynamically for admin review
@@ -105,6 +114,9 @@ const AdminProviders = () => {
             active: false
           };
           
+          if (newCount < 5) console.log(`[SYNC_MATCH] No match for ${svc.providerServiceCode}. Created new service with ID: ${newSvc.id}`);
+          newCount++;
+
           const { error: insertSvcErr } = await supabase.from('services').insert([newSvc]);
           if (!insertSvcErr) {
             ourServices.push(newSvc);
@@ -112,6 +124,9 @@ const AdminProviders = () => {
           } else {
             console.error("Failed to create new service for", svc.providerServiceCode, insertSvcErr);
           }
+        } else {
+          if (matchCount < 5) console.log(`[SYNC_MATCH] Matched ${svc.providerServiceCode} to existing service ID: ${localSvc.id}`);
+          matchCount++;
         }
 
         if (localSvc) {
