@@ -65,11 +65,24 @@ const Sms24hAdapter = {
       
       const services = [];
       for (const [code, info] of Object.entries(countryData)) {
-        // info is like: { price: qty, ... }
-        const priceKeys = Object.keys(info);
-        if (priceKeys.length > 0) {
-          const price = parseFloat(priceKeys[0]);
-          const quantity = info[priceKeys[0]];
+        // SMS24H format is: { cost: 0.50, count: 1000 }
+        // SMS-Activate format is: { "0.50": 1000 }
+        let price = 0;
+        let quantity = 0;
+
+        if (info.cost !== undefined && info.count !== undefined) {
+          price = parseFloat(info.cost);
+          quantity = parseInt(info.count, 10);
+        } else {
+          // Fallback to SMS-Activate standard if needed
+          const priceKeys = Object.keys(info);
+          if (priceKeys.length > 0) {
+            price = parseFloat(priceKeys[0]);
+            quantity = parseInt(info[priceKeys[0]], 10);
+          }
+        }
+
+        if (price > 0 || quantity > 0) {
           services.push({ providerServiceCode: code, price, quantity });
         }
       }
