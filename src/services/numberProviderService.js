@@ -164,7 +164,7 @@ export const numberProviderService = {
 
     // Filter active offers and providers in JS, format the final array
     return data.map(s => {
-      const activeOffers = (s.offers || []).filter(o => o.active && o.provider && o.provider.active);
+      const activeOffers = (s.offers || []).filter(o => o.active && o.provider && o.provider.active && o.sale_price > 0);
       // Sort offers by default first, then lowest price
       activeOffers.sort((a, b) => {
         if (a.is_default && !b.is_default) return -1;

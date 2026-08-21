@@ -198,7 +198,7 @@ const Servicos = () => {
                 
                 <div className="service-action" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: 'auto' }}>
                   {!hasAnyOffer ? (
-                    <div className="service-hint error">Sem fornecedores ativos</div>
+                    <div className="service-hint error">Serviço temporariamente indisponível</div>
                   ) : (
                     service.offers.map((offer) => {
                       const canAfford = userBalance >= offer.sale_price;

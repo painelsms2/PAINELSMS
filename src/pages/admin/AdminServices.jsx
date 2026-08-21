@@ -341,7 +341,8 @@ const ServiceOffersManager = ({ service, providers, onRefresh, addToast }) => {
                     <input type="number" step="0.01" className="rm-input" style={{ width: 70, padding: '0.15rem' }} value={costPrice} onChange={e => handleEdit(offer.id, 'cost_price', e.target.value)} />
                   </td>
                   <td>
-                    <input type="number" step="0.01" className="rm-input" style={{ width: 70, padding: '0.15rem' }} value={salePrice} onChange={e => handleEdit(offer.id, 'sale_price', e.target.value)} />
+                    <input type="number" step="0.01" className="rm-input" style={{ width: 70, padding: '0.15rem', borderColor: salePrice <= 0 ? 'var(--danger-color)' : '' }} value={salePrice} onChange={e => handleEdit(offer.id, 'sale_price', e.target.value)} />
+                    {salePrice <= 0 && <div style={{ fontSize: '0.6rem', color: 'var(--danger-color)' }}>Preço não definido</div>}
                   </td>
                   <td>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>

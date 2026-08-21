@@ -107,7 +107,7 @@ const AdminProviders = () => {
               provider_id: provider.id,
               provider_service_code: svc.providerServiceCode,
               cost_price: svc.price,
-              sale_price: svc.price * 2, // Auto markup x2 initially
+              sale_price: 0, // Admin must set manually
               stock: svc.quantity,
               active: false, // Inactive by default for admin review
               is_default: false
