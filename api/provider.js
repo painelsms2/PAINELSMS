@@ -90,19 +90,44 @@ const NumeroVirtualAdapter = {
   baseUrl: 'https://v3.numero-virtual.app/api',
 
   async request(endpoint, method = 'GET', body = null) {
-    console.log(`[NumeroVirtual Adapter] API Key defined: ${!!NUMEROVIRTUAL_API_KEY}, length: ${NUMEROVIRTUAL_API_KEY ? NUMEROVIRTUAL_API_KEY.length : 0}`);
-    
     const key = (NUMEROVIRTUAL_API_KEY || '').trim();
-    const joinChar = endpoint.includes('?') ? '&' : '?';
-    const url = `${this.baseUrl}${endpoint}${joinChar}api-key=${encodeURIComponent(key)}`;
+    
+    // Mask key for logging
+    let maskedKey = "UNDEFINED";
+    if (key.length > 8) {
+      maskedKey = `${key.slice(0, 4)}...${key.slice(-4)}`;
+    } else if (key.length > 0) {
+      maskedKey = "TOO_SHORT";
+    }
+
+    console.log(`[NumeroVirtual Adapter] API Key defined: ${!!key}, length: ${key.length}, masked: ${maskedKey}`);
+    
+    // Safely append api-key using URL object
+    const fullUrl = new URL(`${this.baseUrl}${endpoint}`);
+    fullUrl.searchParams.append('api-key', key);
+    const urlStr = fullUrl.toString();
+
+    // Mask URL for logging
+    const maskedUrl = urlStr.replace(key, maskedKey);
+    console.log(`[NumeroVirtual Adapter] Request URL: ${maskedUrl}`);
 
     const opts = {
       method,
       headers: { 'api-key': key, 'Content-Type': 'application/json' }
     };
     if (body) opts.body = JSON.stringify(body);
-    const res = await fetch(url, opts);
-    return await res.json();
+    
+    console.log(`[NumeroVirtual Adapter] Request Method: ${method}, Headers:`, { ...opts.headers, 'api-key': maskedKey });
+
+    const res = await fetch(urlStr, opts);
+    const rawText = await res.text();
+    console.log(`[NumeroVirtual Adapter] Response Status: ${res.status}, Body: ${rawText.substring(0, 500)}`);
+    
+    try {
+      return JSON.parse(rawText);
+    } catch (e) {
+      throw new Error(`Invalid JSON response: ${rawText}`);
+    }
   },
 
   async buyNumber(offer) {
