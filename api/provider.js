@@ -57,7 +57,7 @@ const Sms24hAdapter = {
     try {
       const data = JSON.parse(text);
       const countryData = data[country];
-      if (!countryData) return [];
+      if (!countryData) throw new Error("Country data not found in response");
       
       const services = [];
       for (const [code, info] of Object.entries(countryData)) {
@@ -71,8 +71,8 @@ const Sms24hAdapter = {
       }
       return services;
     } catch (e) {
-      console.error('SMS24H Parse Error:', e);
-      return [];
+      console.error('SMS24H Parse Error:', e, 'Raw Response:', text);
+      throw new Error(`SMS24H Error: ${text}`);
     }
   },
 
@@ -155,10 +155,10 @@ const NumeroVirtualAdapter = {
           quantity: parseInt(s.quantity, 10)
         }));
       }
-      return [];
+      throw new Error(`NumeroVirtual Error: Missing results array. Response: ${JSON.stringify(data)}`);
     } catch (e) {
-      console.error('NumeroVirtual Parse Error:', e);
-      return [];
+      console.error('NumeroVirtual Error:', e);
+      throw new Error(`NumeroVirtual Error: ${e.message}`);
     }
   },
 
