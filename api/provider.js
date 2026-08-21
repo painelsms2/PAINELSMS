@@ -100,7 +100,8 @@ const NumeroVirtualAdapter = {
       maskedKey = "TOO_SHORT";
     }
 
-    console.log(`[NumeroVirtual Adapter] API Key defined: ${!!key}, length: ${key.length}, masked: ${maskedKey}`);
+    console.log("NV_KEY_LEN", key.length);
+    console.log("NV_KEY_MASK", maskedKey);
     
     // Safely append api-key using URL object
     const fullUrl = new URL(`${this.baseUrl}${endpoint}`);
@@ -109,19 +110,23 @@ const NumeroVirtualAdapter = {
 
     // Mask URL for logging
     const maskedUrl = urlStr.replace(key, maskedKey);
-    console.log(`[NumeroVirtual Adapter] Request URL: ${maskedUrl}`);
+    console.log("NV_URL", maskedUrl);
 
     const opts = {
       method,
-      headers: { 'api-key': key, 'Content-Type': 'application/json' }
+      headers: { 
+        'api-key': key, 
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0',
+        'Accept': 'application/json'
+      }
     };
     if (body) opts.body = JSON.stringify(body);
     
-    console.log(`[NumeroVirtual Adapter] Request Method: ${method}, Headers:`, { ...opts.headers, 'api-key': maskedKey });
-
     const res = await fetch(urlStr, opts);
     const rawText = await res.text();
-    console.log(`[NumeroVirtual Adapter] Response Status: ${res.status}, Body: ${rawText.substring(0, 500)}`);
+    console.log("NV_STATUS", res.status);
+    console.log("NV_BODY", rawText.substring(0, 200));
     
     try {
       return JSON.parse(rawText);
