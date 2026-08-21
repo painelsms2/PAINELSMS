@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useToast } from '../../contexts/ToastContext';
 import { Search, Loader2, Save, Plus, ChevronDown, ChevronUp, Network, Trash2, Star } from 'lucide-react';
