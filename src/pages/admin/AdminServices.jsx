@@ -198,104 +198,108 @@ const AdminServices = () => {
           </div>
         </div>
 
-        <div style={{ overflowX: 'auto' }}>
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th style={{ width: 40 }}></th>
-                <th>Serviço</th>
-                <th>Fornecedores</th>
-                <th>Melhor Opção (Custo / Margem)</th>
-                <th>Status (Global)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {isLoading ? (
-                <tr>
-                  <td colSpan="5" className="text-center py-8">
-                    <Loader2 size={24} className="spin text-muted mx-auto" />
-                  </td>
-                </tr>
-              ) : filteredServices.length === 0 ? (
-                <tr>
-                  <td colSpan="5" className="text-center py-8 text-muted">
-                    Nenhum serviço encontrado.
-                  </td>
-                </tr>
-              ) : (
-                filteredServices.map(svc => {
-                  const bestDeal = getServiceBestDeal(svc.offers);
-                  const providerCount = svc.offers?.length || 0;
-                  
-                  return (
-                    <React.Fragment key={svc.id}>
-                      <tr className="cursor-pointer hover:bg-black/20" onClick={() => toggleExpand(svc.id)}>
-                        <td className="text-center">
-                          {expandedSvcId === svc.id ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                        </td>
-                        <td>
-                          <div className="user-cell">
-                            <img src={`/images/${svc.icon_file}`} alt={svc.name} className="service-icon-small" onError={e=>e.target.style.display='none'} />
-                            <span className="user-name">{svc.name}</span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1rem', marginTop: '1rem', padding: '0 1rem 1rem 1rem' }}>
+          {isLoading ? (
+            <div className="text-center py-8" style={{ gridColumn: '1 / -1' }}>
+              <Loader2 size={24} className="spin text-muted mx-auto" />
+            </div>
+          ) : filteredServices.length === 0 ? (
+            <div className="text-center py-8 text-muted" style={{ gridColumn: '1 / -1' }}>
+              Nenhum serviço encontrado.
+            </div>
+          ) : (
+            filteredServices.map(svc => {
+              const bestDeal = getServiceBestDeal(svc.offers);
+              const providerCount = svc.offers?.length || 0;
+              const isExpanded = expandedSvcId === svc.id;
+              
+              return (
+                <div key={svc.id} className="admin-card fade-in" style={{ 
+                  display: 'flex', flexDirection: 'column', 
+                  border: isExpanded ? '1px solid var(--primary-color)' : '1px solid var(--border-color)',
+                  boxShadow: isExpanded ? '0 0 10px rgba(var(--primary-color-rgb), 0.1)' : 'none',
+                  transition: 'all 0.2s',
+                  gridColumn: isExpanded ? '1 / -1' : 'auto'
+                }}>
+                  {/* Card Header (always visible) */}
+                  <div 
+                    className="cursor-pointer" 
+                    onClick={() => toggleExpand(svc.id)}
+                    style={{ padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}
+                  >
+                    {/* Left: Icon and Name */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: '1 1 200px' }}>
+                      <img src={`/images/${svc.icon_file}`} alt={svc.name} className="service-icon-small" style={{ width: 44, height: 44, padding: '6px' }} onError={e=>e.target.style.display='none'} />
+                      <div>
+                        <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{svc.name}</div>
+                        <div style={{ display: 'flex', gap: '4px', alignItems: 'center', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                          <Network size={12} />
+                          <span>{providerCount} config.</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Middle: Best Deal Summary */}
+                    <div style={{ flex: '1 1 150px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                      {bestDeal ? (
+                        <>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '2px' }}>Melhor Custo</div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--success-color)' }}></div>
+                            <span className="font-bold text-success">{formatCurrency(bestDeal.cost_price)}</span>
+                            <span className="text-muted" style={{ fontSize: '0.75rem' }}>({(((bestDeal.sale_price - bestDeal.cost_price) / bestDeal.cost_price) * 100).toFixed(0)}% margem)</span>
                           </div>
-                        </td>
-                        <td>
-                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-                            <Network size={14} className="text-muted" />
-                            <span>{providerCount} config.</span>
+                        </>
+                      ) : providerCount > 0 ? (
+                        <>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '2px' }}>Alerta</div>
+                          <div style={{ fontSize: '0.8rem', color: 'var(--danger-color)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <AlertCircle size={14} /> Ofertas Inválidas
                           </div>
-                        </td>
-                        <td>
-                          {bestDeal ? (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                              <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--success-color)' }}></div>
-                              <span className="font-semibold text-success">{formatCurrency(bestDeal.cost_price)}</span>
-                              <span className="text-muted" style={{ fontSize: '0.8rem' }}>
-                                ({(((bestDeal.sale_price - bestDeal.cost_price) / bestDeal.cost_price) * 100).toFixed(0)}% margem)
-                              </span>
-                            </div>
-                          ) : providerCount > 0 ? (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                              <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--danger-color)' }}></div>
-                              <span className="text-muted" style={{ fontSize: '0.8rem' }}>Sem ofertas válidas (estoque/preço)</span>
-                            </div>
-                          ) : (
-                            <span className="text-muted" style={{ fontSize: '0.8rem' }}>-</span>
-                          )}
-                        </td>
-                        <td>
-                          <label className="toggle-switch" onClick={e => e.stopPropagation()}>
-                            <input 
-                              type="checkbox" 
-                              checked={svc.active}
-                              onChange={(e) => handleUpdateServiceActive(svc.id, e.target.checked)}
-                            />
-                            <span className="toggle-slider"></span>
-                          </label>
-                        </td>
-                      </tr>
-                      
-                      {expandedSvcId === svc.id && (
-                        <tr className="expanded-row">
-                          <td colSpan="5" style={{ padding: 0 }}>
-                            <div style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-color)' }}>
-                              <ServiceOffersManager 
-                                service={svc} 
-                                providers={providers} 
-                                onRefresh={fetchAll} 
-                                addToast={addToast} 
-                                bestDealId={bestDeal?.id}
-                              />
-                            </div>
-                          </td>
-                        </tr>
+                        </>
+                      ) : (
+                         <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>-</div>
                       )}
-                    </React.Fragment>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+                    </div>
+                    
+                    {/* Right: Actions */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flex: '0 0 auto' }}>
+                      <label className="toggle-switch" onClick={e => e.stopPropagation()} title={svc.active ? "Ativo" : "Inativo"}>
+                        <input 
+                          type="checkbox" 
+                          checked={svc.active}
+                          onChange={(e) => handleUpdateServiceActive(svc.id, e.target.checked)}
+                        />
+                        <span className="toggle-slider"></span>
+                      </label>
+                      <div style={{ color: 'var(--text-muted)', background: 'var(--bg-secondary)', padding: '0.25rem', borderRadius: '50%' }}>
+                        {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Expanded Content */}
+                  {isExpanded && (
+                    <div style={{ 
+                      padding: '1.5rem', 
+                      background: 'var(--bg-tertiary)', 
+                      borderTop: '1px solid var(--border-color)',
+                      borderBottomLeftRadius: '12px',
+                      borderBottomRightRadius: '12px'
+                    }}>
+                      <ServiceOffersManager 
+                        service={svc} 
+                        providers={providers} 
+                        onRefresh={fetchAll} 
+                        addToast={addToast} 
+                        bestDealId={bestDeal?.id}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
     </div>
