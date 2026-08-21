@@ -82,15 +82,19 @@ const AdminProviders = () => {
 
       // We have the remote services. Now we match them against our DB `services`
       // For each matched service, upsert `service_offers`
-      const { data: ourServices } = await supabase.from('services').select('id, name');
+      const { data: ourServices } = await supabase.from('services').select('id, name, icon_file');
       
       let created = 0;
       let updated = 0;
 
       for (const svc of data.services) {
         // Try to find matching local service
-        // SMS24H uses same code as our ID. NumeroVirtual uses it too.
-        const localSvc = ourServices.find(s => s.id === svc.providerServiceCode || s.name.toLowerCase() === (svc.name||'').toLowerCase());
+        // SMS24H uses SMS-Activate codes (wa, tg, etc) which match our icon_file prefix (wa0.png -> wa)
+        const localSvc = ourServices.find(s => 
+          s.id === svc.providerServiceCode || 
+          (s.icon_file && s.icon_file.replace('0.png', '') === svc.providerServiceCode) ||
+          (svc.name && s.name.toLowerCase() === svc.name.toLowerCase())
+        );
         
         if (localSvc) {
           // Check if offer exists
