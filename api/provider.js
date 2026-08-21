@@ -92,12 +92,16 @@ const NumeroVirtualAdapter = {
   async request(endpoint, method = 'GET', body = null) {
     console.log(`[NumeroVirtual Adapter] API Key defined: ${!!NUMEROVIRTUAL_API_KEY}, length: ${NUMEROVIRTUAL_API_KEY ? NUMEROVIRTUAL_API_KEY.length : 0}`);
     
+    const key = (NUMEROVIRTUAL_API_KEY || '').trim();
+    const joinChar = endpoint.includes('?') ? '&' : '?';
+    const url = `${this.baseUrl}${endpoint}${joinChar}api-key=${encodeURIComponent(key)}`;
+
     const opts = {
       method,
-      headers: { 'api-key': NUMEROVIRTUAL_API_KEY, 'Content-Type': 'application/json' }
+      headers: { 'api-key': key, 'Content-Type': 'application/json' }
     };
     if (body) opts.body = JSON.stringify(body);
-    const res = await fetch(`${this.baseUrl}${endpoint}`, opts);
+    const res = await fetch(url, opts);
     return await res.json();
   },
 
