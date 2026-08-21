@@ -163,7 +163,7 @@ export const numberProviderService = {
     }
 
     // Filter active offers and providers in JS, format the final array
-    return data.map(s => {
+    const mapped = data.map(s => {
       const activeOffers = (s.offers || []).filter(o => o.active && o.provider && o.provider.active && o.sale_price > 0);
       // Sort offers by default first, then lowest price
       activeOffers.sort((a, b) => {
@@ -180,6 +180,9 @@ export const numberProviderService = {
         offers: activeOffers
       };
     });
+
+    // Only return services that have at least one valid offer (to hide fully unavailable ones)
+    return mapped.filter(s => s.offers.length > 0);
   },
 
   async invokeProvider(action, payload = {}) {
