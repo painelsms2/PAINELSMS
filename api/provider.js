@@ -137,7 +137,7 @@ const NumeroVirtualAdapter = {
 
   async buyNumber(offer) {
     const data = await this.request('/sms/buy-number', 'POST', {
-      country: 'br',
+      country: '73',
       service: offer.provider_service_code,
       operator: 'any',
       quantity: 1
@@ -182,7 +182,7 @@ const NumeroVirtualAdapter = {
 
   async listServices(country = 'br') {
     try {
-      const data = await this.request(`/sms/service?country=${country}&limit=1000`);
+      const data = await this.request(`/sms/service?page=1&limit=1000`);
       if (data.results) {
         return data.results.map(s => ({
           providerServiceCode: s.serviceCode,

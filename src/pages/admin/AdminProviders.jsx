@@ -89,13 +89,31 @@ const AdminProviders = () => {
 
       for (const svc of data.services) {
         // Try to find matching local service
-        // SMS24H uses SMS-Activate codes (wa, tg, etc) which match our icon_file prefix (wa0.png -> wa)
-        const localSvc = ourServices.find(s => 
+        let localSvc = ourServices.find(s => 
           s.id === svc.providerServiceCode || 
           (s.icon_file && s.icon_file.replace('0.png', '') === svc.providerServiceCode) ||
           (svc.name && s.name.toLowerCase() === svc.name.toLowerCase())
         );
         
+        if (!localSvc) {
+          // Create the missing service dynamically for admin review
+          const newSvc = {
+            id: svc.providerServiceCode,
+            name: svc.name || svc.providerServiceCode.toUpperCase(),
+            country: 'br',
+            icon_file: `${svc.providerServiceCode}0.png`,
+            active: false
+          };
+          
+          const { error: insertSvcErr } = await supabase.from('services').insert([newSvc]);
+          if (!insertSvcErr) {
+            ourServices.push(newSvc);
+            localSvc = newSvc;
+          } else {
+            console.error("Failed to create new service for", svc.providerServiceCode, insertSvcErr);
+          }
+        }
+
         if (localSvc) {
           // Check if offer exists
           const { data: existing } = await supabase.from('service_offers').select('*').eq('service_id', localSvc.id).eq('provider_id', provider.id).single();
