@@ -13,8 +13,20 @@ const AdminServices = () => {
   
   // Filters
   const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
   const [providerFilter, setProviderFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+
+  const categorizeService = (name) => {
+    const n = (name || '').toLowerCase();
+    if (n.includes('facebook') || n.includes('instagram') || n.includes('whatsapp') || n.includes('telegram') || n.includes('tiktok') || n.includes('twitter') || n.includes('tinder') || n.includes('viber') || n.includes('discord')) return 'Rede Social';
+    if (n.includes('mercado') || n.includes('shopee') || n.includes('amazon') || n.includes('olx') || n.includes('privalia') || n.includes('aliexpress') || n.includes('enjoei')) return 'E-commerce';
+    if (n.includes('govbr') || n.includes('picpay') || n.includes('nubank') || n.includes('santander') || n.includes('c6 bank') || n.includes('bitso') || n.includes('pagbank') || n.includes('paypal') || n.includes('agibank') || n.includes('neon') || n.includes('coinbase') || n.includes('asaas') || n.includes('bradesco') || n.includes('next') || n.includes('caixa') || n.includes('binance') || n.includes('getnet') || n.includes('bipa') || n.includes('infinitepay') || n.includes('pay') || n.includes('bank') || n.includes('banco') || n.includes('crypto')) return 'Banco';
+    if (n.includes('ifood') || n.includes('ze') || n.includes('delivery') || n.includes('ultragaz') || n.includes('doordash') || n.includes('burger') || n.includes('glovo') || n.includes('food') || n.includes('mcdonalds') || n.includes('brahma')) return 'Delivery';
+    if (n.includes('99') || n.includes('uber') || n.includes('blabla') || n.includes('didi') || n.includes('guiche') || n.includes('dott') || n.includes('taxi') || n.includes('drive') || n.includes('car')) return 'Transporte';
+    if (n.includes('bet') || n.includes('cassino') || n.includes('aposta') || n.includes('cruzeiro') || n.includes('beboo') || n.includes('winzo') || n.includes('arena') || n.includes('cash')) return 'Bet';
+    return 'Outros'; 
+  };
   
   const [expandedSvcId, setExpandedSvcId] = useState(null);
 
@@ -118,6 +130,11 @@ const AdminServices = () => {
       // Name Search
       if (search && !s.name?.toLowerCase().includes(search.toLowerCase())) return false;
       
+      // Category Filter
+      if (categoryFilter) {
+        if (categorizeService(s.name) !== categoryFilter) return false;
+      }
+      
       // Provider Filter
       if (providerFilter) {
         const hasProvider = s.offers?.some(o => o.provider_id === providerFilter);
@@ -140,7 +157,7 @@ const AdminServices = () => {
       
       return true;
     });
-  }, [services, search, providerFilter, statusFilter]);
+  }, [services, search, categoryFilter, providerFilter, statusFilter]);
 
   // Helper to find best deal per service (used in rows)
   const getServiceBestDeal = (offers) => {
@@ -205,8 +222,21 @@ const AdminServices = () => {
           
           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
             <Filter size={16} className="text-muted" />
-            <select className="rm-input" style={{ width: '180px' }} value={providerFilter} onChange={e => setProviderFilter(e.target.value)}>
-              <option value="">Todos os fornecedores</option>
+            <select className="rm-input" style={{ width: '150px' }} value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
+              <option value="">Todas as Categorias</option>
+              <option value="Rede Social">Rede Social</option>
+              <option value="E-commerce">E-commerce</option>
+              <option value="Banco">Banco</option>
+              <option value="Delivery">Delivery</option>
+              <option value="Transporte">Transporte</option>
+              <option value="Bet">Bet</option>
+              <option value="Outros">Outros</option>
+            </select>
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <select className="rm-input" style={{ width: '160px' }} value={providerFilter} onChange={e => setProviderFilter(e.target.value)}>
+              <option value="">Todos fornecedores</option>
               {providers.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
