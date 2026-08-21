@@ -59,6 +59,30 @@ const AdminServices = () => {
     }
   };
 
+  const handleBulkUpdate = async (active) => {
+    // Apply only to currently filtered services
+    const ids = filteredServices.map(s => s.id);
+    if (ids.length === 0) return;
+    
+    if (!window.confirm(`Tem certeza que deseja ${active ? 'ativar' : 'desativar'} ${ids.length} serviços exibidos na tela?`)) return;
+    
+    setIsLoading(true);
+    try {
+      for (let i = 0; i < ids.length; i += 100) {
+        const chunk = ids.slice(i, i + 100);
+        const { error } = await supabase.from('services').update({ active }).in('id', chunk);
+        if (error) throw error;
+      }
+      addToast(`${ids.length} serviços foram ${active ? 'ativados' : 'desativados'}.`, "success");
+      setServices(services.map(s => ids.includes(s.id) ? { ...s, active } : s));
+    } catch (err) {
+      console.error(err);
+      addToast("Erro na atualização em massa", "error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const formatCurrency = (val) => {
     return Number(val || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   };
@@ -195,6 +219,15 @@ const AdminServices = () => {
               <option value="estoque">Com Estoque</option>
               <option value="sem_preco">Sem Preço Definido</option>
             </select>
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginLeft: 'auto' }}>
+            <button className="btn" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-color)', padding: '0.4rem 0.75rem', fontSize: '0.8rem' }} onClick={() => handleBulkUpdate(true)}>
+              Ativar Todos
+            </button>
+            <button className="btn" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--danger-color)', color: 'var(--danger-color)', padding: '0.4rem 0.75rem', fontSize: '0.8rem' }} onClick={() => handleBulkUpdate(false)}>
+              Desativar Todos
+            </button>
           </div>
         </div>
 
