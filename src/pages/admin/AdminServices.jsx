@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useToast } from '../../contexts/ToastContext';
-import { Search, Loader2, Save, Plus, ChevronDown, ChevronUp, Network, Trash2, Star, Lock, Unlock, Filter, CheckCircle, AlertCircle, TrendingUp } from 'lucide-react';
+import { SERVICE_CODES } from '../../services/numberProviderService';
+import { Search, Loader2, Save, Plus, ChevronDown, ChevronUp, Network, Trash2, Star, Lock, Unlock, Filter, CheckCircle, AlertCircle, TrendingUp, Eraser } from 'lucide-react';
 import './AdminServices.css';
 import './AdminUsers.css'; // reaproveitar estilos da tabela
 
@@ -90,6 +91,55 @@ const AdminServices = () => {
     } catch (err) {
       console.error(err);
       addToast("Erro na atualização em massa", "error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCleanupJunk = async () => {
+    if (!window.confirm("Deseja mesclar ou desativar serviços de 'lixo' (códigos como AAB, WA, FB gerados por sync)?\n\nIsso irá mesclar com serviços existentes ou ocultá-los.")) return;
+    
+    setIsLoading(true);
+    try {
+      const CODE_TO_NAME = {};
+      for (const [name, code] of Object.entries(SERVICE_CODES)) {
+        CODE_TO_NAME[code] = name;
+      }
+
+      // Junk: names that are 2-5 uppercase/alphanumeric chars, no custom icon
+      const junkServices = services.filter(s => /^[A-Z0-9_]{2,5}$/i.test(s.name) && s.name === s.name.toUpperCase() && (!s.icon_file || s.icon_file.trim() === ''));
+      
+      let merged = 0;
+      let deactivated = 0;
+
+      for (const junk of junkServices) {
+        const codeLower = junk.name.toLowerCase();
+        const realName = CODE_TO_NAME[codeLower];
+        
+        if (realName) {
+          const realService = services.find(s => s.name.toLowerCase() === realName.toLowerCase() && s.id !== junk.id);
+          if (realService) {
+            await supabase.from('service_offers').update({ service_id: realService.id }).eq('service_id', junk.id);
+            await supabase.from('services').delete().eq('id', junk.id);
+            merged++;
+          } else {
+            if (junk.active) {
+              await supabase.from('services').update({ active: false }).eq('id', junk.id);
+              deactivated++;
+            }
+          }
+        } else {
+          if (junk.active) {
+            await supabase.from('services').update({ active: false }).eq('id', junk.id);
+            deactivated++;
+          }
+        }
+      }
+      addToast(`Limpeza concluída! Mesclados: ${merged}, Desativados: ${deactivated}`, "success");
+      fetchAll();
+    } catch (err) {
+      console.error(err);
+      addToast("Erro durante a limpeza", "error");
     } finally {
       setIsLoading(false);
     }
@@ -252,6 +302,9 @@ const AdminServices = () => {
           </div>
 
           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginLeft: 'auto' }}>
+            <button className="btn" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-color)', padding: '0.4rem 0.75rem', fontSize: '0.8rem', display: 'flex', gap: '0.25rem', alignItems: 'center' }} onClick={handleCleanupJunk} title="Mescla/desativa serviços como AAB, WA, FB vindos de sincronização">
+              <Eraser size={14} /> Limpar Lixo
+            </button>
             <button className="btn" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-color)', padding: '0.4rem 0.75rem', fontSize: '0.8rem' }} onClick={() => handleBulkUpdate(true)}>
               Ativar Todos
             </button>

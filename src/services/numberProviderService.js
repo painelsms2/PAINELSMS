@@ -1,7 +1,7 @@
 import { supabase } from '../lib/supabase';
 
 // Mapeamento dos serviços do nosso banco para os códigos universais (SMS-Activate API)
-const SERVICE_CODES = {
+export const SERVICE_CODES = {
   '99app': 'ki',
   'agibank': 'sa',
   'aliexpress': 'hx',
