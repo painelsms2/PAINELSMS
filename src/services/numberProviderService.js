@@ -182,7 +182,19 @@ export const numberProviderService = {
     });
 
     // Only return services that have at least one valid offer (to hide fully unavailable ones)
-    return mapped.filter(s => s.offers.length > 0);
+    return mapped.filter(s => {
+      if (s.offers.length === 0) return false;
+      
+      // Filter out auto-created junk services (e.g. AAB, ABK, WA) from raw provider syncs
+      // A raw code is typically 2 to 4 uppercase letters and generally has no custom icon configured
+      const isRawCodePattern = /^[A-Z0-9_]{2,5}$/.test(s.name);
+      const isMissingIcon = !s.icon || s.icon.trim() === '';
+      if (isRawCodePattern && isMissingIcon) {
+        return false;
+      }
+      
+      return true;
+    });
   },
 
   async invokeProvider(action, payload = {}) {

@@ -110,13 +110,11 @@ const Servicos = () => {
 
   return (
     <div className="servicos-page">
-      <div className="azulejo-bg"></div>
+      <div className="calm-bg"></div>
       <div className="floating-bubbles">
         <MessageSquare className="bubble bubble-1" size={48} />
         <MessageSquare className="bubble bubble-2" size={32} />
         <MessageSquare className="bubble bubble-3" size={64} />
-        <MessageSquare className="bubble bubble-4" size={24} />
-        <MessageSquare className="bubble bubble-5" size={56} />
       </div>
 
       <div className="page-header">
@@ -214,6 +212,7 @@ const Servicos = () => {
                       const hasStock = offer.stock > 0;
                       const isThisLoading = isPurchasing && purchasingId === `${service.id}-${offer.id}`;
                       
+                      return (
                           <div className="provider-offer-row" key={offer.id} style={{ opacity: (!hasStock || !canAfford) ? 0.6 : 1 }}>
                             <div className="provider-info-col">
                               {offer.provider.logo_key && (
