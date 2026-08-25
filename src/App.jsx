@@ -26,8 +26,8 @@ const Placeholder = ({ title }) => (
 );
 
 function App() {
-  // Define se o modo de manutenção está ativo (mude para false amanhã às 11h para desativar)
-  const isMaintenance = true;
+  // Define se o modo de manutenção está ativo (mude para false amanhã às 13h para desativar)
+  const isMaintenance = window.location.hostname !== 'localhost' && !window.location.hostname.startsWith('192.168');
 
   if (isMaintenance) {
     return <Maintenance />;
