@@ -5,7 +5,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { numberProviderService } from '../../services/numberProviderService';
 import { historyService } from '../../services/historyService';
 import Skeleton from '../../components/ui/Skeleton';
-import { Search, Loader2, Signal, AlertCircle, PlusCircle, LayoutGrid, Users, ShoppingCart, Landmark, Bike, Car, Dices } from 'lucide-react';
+import { Search, Loader2, Signal, AlertCircle, PlusCircle, LayoutGrid, Users, ShoppingCart, Landmark, Bike, Car, Dices, MessageSquare } from 'lucide-react';
 import { ServiceIcon } from '../../components/ServiceIcon';
 import './Servicos.css';
 
@@ -110,6 +110,15 @@ const Servicos = () => {
 
   return (
     <div className="servicos-page">
+      <div className="azulejo-bg"></div>
+      <div className="floating-bubbles">
+        <MessageSquare className="bubble bubble-1" size={48} />
+        <MessageSquare className="bubble bubble-2" size={32} />
+        <MessageSquare className="bubble bubble-3" size={64} />
+        <MessageSquare className="bubble bubble-4" size={24} />
+        <MessageSquare className="bubble bubble-5" size={56} />
+      </div>
+
       <div className="page-header">
         <div>
           <h1 className="page-title">Serviços</h1>
@@ -173,13 +182,13 @@ const Servicos = () => {
             </div>
           ))
         ) : filteredServices.length > 0 ? (
-          filteredServices.map(service => {
+          filteredServices.map((service, index) => {
             const userBalance = user?.balance || 0;
             const hasAnyOffer = service.offers && service.offers.length > 0;
             const fromPrice = hasAnyOffer ? service.offers[0].sale_price : 0;
             
             return (
-              <div key={service.id} className={`service-card ${!hasAnyOffer ? 'disabled' : ''}`}>
+              <div key={service.id} className={`service-card ${!hasAnyOffer ? 'disabled' : ''}`} style={{ '--anim-order': index }}>
                 <div className="service-card-header">
                   <div className="service-icon-wrapper">
                     <ServiceIcon service={service} />
@@ -205,29 +214,28 @@ const Servicos = () => {
                       const hasStock = offer.stock > 0;
                       const isThisLoading = isPurchasing && purchasingId === `${service.id}-${offer.id}`;
                       
-                      return (
-                        <div key={offer.id} className="provider-offer-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', padding: '0.5rem', background: 'var(--bg-tertiary)', borderRadius: '8px', opacity: (!hasStock || !canAfford) ? 0.6 : 1 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1 }}>
-                            {offer.provider.logo_key && (
-                              <img src={`/${offer.provider.logo_key}`} alt={offer.provider.name} style={{ width: 16, height: 16, objectFit: 'contain', borderRadius: '4px' }} onError={(e) => e.target.style.display = 'none'} />
-                            )}
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                              <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-primary)' }}>{offer.provider.name}</span>
-                              <span style={{ fontSize: '0.7rem', color: hasStock ? 'var(--success-color)' : 'var(--danger-color)' }}>
-                                {hasStock ? `${offer.stock} unid.` : 'Esgotado'}
-                              </span>
+                          <div className="provider-offer-row" key={offer.id} style={{ opacity: (!hasStock || !canAfford) ? 0.6 : 1 }}>
+                            <div className="provider-info-col">
+                              {offer.provider.logo_key && (
+                                <img src={`/${offer.provider.logo_key}`} alt={offer.provider.name} className="provider-logo" onError={(e) => e.target.style.display = 'none'} />
+                              )}
+                              <div className="provider-texts">
+                                <span className="provider-name">{offer.provider.name}</span>
+                                <span className={`provider-stock ${hasStock ? 'stock-ok' : 'stock-out'}`}>
+                                  {hasStock ? `${offer.stock} unid.` : 'Esgotado'}
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                          
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>R$ {Number(offer.sale_price).toFixed(2)}</span>
+                            
+                            <div className="provider-action-col">
+                            <span className="offer-price">R$ {Number(offer.sale_price).toFixed(2)}</span>
                             <button 
-                              className="btn btn-primary" 
-                              style={{ padding: '0.3rem 0.5rem', minWidth: '40px' }}
+                              className="btn btn-buy-gradient" 
                               disabled={!canAfford || !hasStock || isPurchasing}
                               onClick={() => handlePurchase(service, offer)}
+                              title={!canAfford ? "Saldo insuficiente" : !hasStock ? "Esgotado" : "Comprar número"}
                             >
-                              {isThisLoading ? <Loader2 size={14} className="spin mx-auto" /> : '+'}
+                              {isThisLoading ? <Loader2 size={16} className="spin" /> : '+'}
                             </button>
                           </div>
                         </div>
