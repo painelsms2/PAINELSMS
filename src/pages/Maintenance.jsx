@@ -26,7 +26,7 @@ const Maintenance = () => {
       <p style={{ fontSize: '1.25rem', color: '#a3a3a3', maxWidth: '600px', lineHeight: '1.6' }}>
         Estamos realizando atualizações importantes em nosso sistema para oferecer uma experiência ainda melhor.
         <br /><br />
-        Previsão de retorno: <strong>Amanhã às 13:00h</strong>.
+        Previsão de retorno: <strong>25/08/26 às 13:00h</strong>.
         <br /><br />
         Agradecemos a sua compreensão e paciência!
       </p>
