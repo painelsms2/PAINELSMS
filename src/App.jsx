@@ -26,8 +26,8 @@ const Placeholder = ({ title }) => (
 );
 
 function App() {
-  const maintenanceEnd = new Date('2026-08-25T11:00:00-03:00');
-  const isMaintenance = new Date() < maintenanceEnd;
+  // Define se o modo de manutenção está ativo (mude para false amanhã às 11h para desativar)
+  const isMaintenance = true;
 
   if (isMaintenance) {
     return <Maintenance />;
