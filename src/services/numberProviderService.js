@@ -151,7 +151,7 @@ export const numberProviderService = {
         id, name, country, icon_file, active,
         offers:service_offers(
           id, sale_price, stock, provider_service_code, is_default, active, provider_id,
-          provider:providers(id, name, logo_key, active, key)
+          provider:providers(id, name, logo_key, active, key, health_status)
         ),
         ddd_availability:service_ddd_availability(ddd, status, provider_id)
       `)
@@ -166,11 +166,18 @@ export const numberProviderService = {
     // Filter active offers and providers in JS, format the final array
     const mapped = data.map(s => {
       const activeOffers = (s.offers || []).filter(o => o.active && o.provider && o.provider.active && o.sale_price > 0);
-      // Sort offers by default first, then lowest price
+      // Priority: healthy providers first, then cheapest. A provider flagged
+      // 'unstable' by the backend loses the recommendation even when cheaper,
+      // and regains it automatically once it succeeds again. Missing health data
+      // is treated as healthy so the list never breaks if the column is absent.
+      const isUnstable = (o) => o.provider?.health_status === 'unstable';
       activeOffers.sort((a, b) => {
+        if (isUnstable(a) !== isUnstable(b)) return isUnstable(a) ? 1 : -1;
+        if (a.sale_price !== b.sale_price) return a.sale_price - b.sale_price;
+        // Admin's manual preference only breaks ties
         if (a.is_default && !b.is_default) return -1;
         if (!a.is_default && b.is_default) return 1;
-        return a.sale_price - b.sale_price;
+        return 0;
       });
 
       return {

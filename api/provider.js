@@ -36,6 +36,41 @@ function checkPollRateLimit(activationId, windowMs = 2000) {
 
 
 /**
+ * Provider-side failures that should count against a provider's health.
+ * NO_NUMBERS is deliberately excluded: it means that specific service/DDD is out
+ * of stock, not that the provider is down, and counting it would flip a healthy
+ * provider to unstable on normal stock gaps.
+ */
+function isProviderSideFailure(message = '') {
+  if (message === 'NO_NUMBERS') return false;
+  return (
+    message.includes('LIMITED_ACTIVATIONS') ||
+    message.includes('NO_BALANCE') ||
+    message.includes('ERROR_SQL') ||
+    message.includes('fetch failed') ||
+    message.includes('timeout') ||
+    message.includes('Invalid JSON response') ||
+    message.includes('Error:')
+  );
+}
+
+/**
+ * Best-effort health bookkeeping. Never let this break a purchase — if the
+ * health tables/RPC are missing, the caller keeps working as before (fail-open).
+ */
+async function recordProviderResult(client, providerId, success) {
+  if (!client || !providerId) return;
+  try {
+    await client.rpc('record_provider_result', {
+      p_provider_id: providerId,
+      p_success: success
+    });
+  } catch (e) {
+    console.error('record_provider_result failed (non-fatal):', e?.message || e);
+  }
+}
+
+/**
  * Adapter Interface:
  * buyNumber(offer) -> { providerActivationId, phone }
  * checkSms(providerActivationId) -> { status: 'waiting'|'completed'|'cancelled'|'expired', code?: string }
@@ -348,7 +383,11 @@ export default async function handler(req, res) {
       let providerRes;
       try {
         providerRes = await adapter.buyNumber(offer, ddd);
+        await recordProviderResult(adminSupabase, offer.provider_id, true);
       } catch (err) {
+        if (isProviderSideFailure(err.message)) {
+          await recordProviderResult(adminSupabase, offer.provider_id, false);
+        }
         if (err.message === 'NO_NUMBERS') {
           throw new Error("DDD não disponível para este serviço, tente outro ou 'Qualquer'");
         }

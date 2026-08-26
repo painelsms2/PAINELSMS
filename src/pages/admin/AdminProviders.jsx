@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useToast } from '../../contexts/ToastContext';
-import { Network, Plus, Edit2, Check, X, Loader2, Trash2, RefreshCw, Wallet } from 'lucide-react';
+import { Network, Plus, Edit2, Check, X, Loader2, Trash2, RefreshCw, HeartPulse } from 'lucide-react';
 import './AdminUsers.css'; // Reusing admin tables styling
 
 const AdminProviders = () => {
@@ -87,8 +87,10 @@ const AdminProviders = () => {
       let created = 0;
       let updated = 0;
 
-      let matchCount = 0;
-      let newCount = 0;
+      // Markup is per-provider and configurable; 100% keeps the historical x2.
+      const markupPercent = Number(provider.auto_markup_percent ?? 100);
+      const applyMarkup = (cost) =>
+        Math.round(Number(cost) * (1 + markupPercent / 100) * 100) / 100;
 
       for (const svc of data.services) {
         // Try to find matching local service
@@ -129,7 +131,7 @@ const AdminProviders = () => {
             // Update cost and stock
             const payload = { cost_price: svc.price, stock: svc.quantity };
             if (!existing.price_locked) {
-              payload.sale_price = svc.price * 2;
+              payload.sale_price = applyMarkup(svc.price);
             }
             await supabase.from('service_offers').update(payload).eq('id', existing.id);
             updated++;
@@ -140,9 +142,9 @@ const AdminProviders = () => {
               provider_id: provider.id,
               provider_service_code: svc.providerServiceCode,
               cost_price: svc.price,
-              sale_price: svc.price * 2, // Auto markup x2 initially
+              sale_price: applyMarkup(svc.price),
               stock: svc.quantity,
-              active: false, // Inactive by default for admin review
+              active: true, // Auto-activated; admin can still disable individually
               is_default: false,
               price_locked: false
             }]);
@@ -181,7 +183,8 @@ const AdminProviders = () => {
         name: editForm.name,
         key: editForm.key,
         logo_key: editForm.logo_key,
-        active: editForm.active
+        active: editForm.active,
+        auto_markup_percent: Number(editForm.auto_markup_percent ?? 100)
       })
       .eq('id', editingId);
 
@@ -219,6 +222,16 @@ const AdminProviders = () => {
       fetchProviders();
     }
     setIsSaving(false);
+  };
+
+  const handleResetHealth = async (provider) => {
+    const { error } = await supabase.rpc('admin_reset_provider_health', { p_provider_id: provider.id });
+    if (error) {
+      addToast('Erro ao resetar saúde do fornecedor', 'error');
+    } else {
+      addToast(`${provider.name} marcado como saudável`, 'success');
+      fetchProviders();
+    }
   };
 
   const handleDelete = async (id) => {
@@ -287,15 +300,17 @@ const AdminProviders = () => {
                 <th>Nome</th>
                 <th>Key</th>
                 <th>Saldo API</th>
+                <th>Markup</th>
+                <th>Saúde</th>
                 <th>Status</th>
                 <th className="text-right">Ações</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
-                <tr><td colSpan="7" className="text-center py-4"><Loader2 className="spin text-muted mx-auto" /></td></tr>
+                <tr><td colSpan="9" className="text-center py-4"><Loader2 className="spin text-muted mx-auto" /></td></tr>
               ) : providers.length === 0 ? (
-                <tr><td colSpan="7" className="text-center py-4 text-muted">Nenhum fornecedor cadastrado</td></tr>
+                <tr><td colSpan="9" className="text-center py-4 text-muted">Nenhum fornecedor cadastrado</td></tr>
               ) : (
                 providers.map(provider => (
                   <tr key={provider.id}>
@@ -313,6 +328,19 @@ const AdminProviders = () => {
                         </td>
                         <td>
                           <input type="text" className="rm-input" value={editForm.key} onChange={e => setEditForm({...editForm, key: e.target.value})} style={{ padding: '0.25rem', height: 'auto' }} />
+                        </td>
+                        <td>-</td>
+                        <td>
+                          <input
+                            type="number"
+                            min="0"
+                            step="1"
+                            className="rm-input"
+                            value={editForm.auto_markup_percent ?? 100}
+                            onChange={e => setEditForm({...editForm, auto_markup_percent: e.target.value})}
+                            style={{ padding: '0.25rem', height: 'auto', width: '80px' }}
+                            title="Margem aplicada sobre o custo na sincronização (100% = dobro do custo)"
+                          />
                         </td>
                         <td>-</td>
                         <td>
@@ -344,13 +372,37 @@ const AdminProviders = () => {
                             ? <span title="API não possui endpoint de saldo">N/D (sem endpoint)</span>
                             : balances[provider.id] !== undefined ? `R$ ${balances[provider.id].toFixed(2)}` : 'N/D'}
                         </td>
+                        <td className="text-muted">
+                          {Number(provider.auto_markup_percent ?? 100)}%
+                        </td>
+                        <td>
+                          {provider.health_status === 'unstable' ? (
+                            <span
+                              className="status-badge warning"
+                              title={`${provider.consecutive_failures || 0} falhas seguidas${provider.last_failure_at ? ` · última em ${new Date(provider.last_failure_at).toLocaleString('pt-BR')}` : ''}`}
+                            >
+                              Instável
+                            </span>
+                          ) : (
+                            <span className="status-badge success">Saudável</span>
+                          )}
+                        </td>
                         <td>
                           <span className={`status-badge ${provider.active ? 'success' : 'danger'}`}>
                             {provider.active ? 'Ativo' : 'Inativo'}
                           </span>
                         </td>
                         <td className="text-right">
-                          <button 
+                          {provider.health_status === 'unstable' && (
+                            <button
+                              className="btn-icon text-success"
+                              onClick={() => handleResetHealth(provider)}
+                              title="Marcar como saudável novamente (reset manual)"
+                            >
+                              <HeartPulse size={16} />
+                            </button>
+                          )}
+                          <button
                             className={`btn-icon ${provider.active ? 'text-warning' : 'text-success'}`}
                             onClick={async () => {
                               const newStatus = !provider.active;

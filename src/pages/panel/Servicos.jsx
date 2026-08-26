@@ -41,8 +41,11 @@ const ServiceCardItem = React.memo(({
         {!hasAnyOffer ? (
           <div className="service-hint error">Serviço temporariamente indisponível</div>
         ) : (
-          service.offers.map((offer) => {
+          service.offers.map((offer, offerIndex) => {
             const isSms24h = offer.provider.name.toLowerCase().includes('sms24h') || offer.provider.key?.toLowerCase() === 'sms24h' || offer.provider.name.toLowerCase() === 'laranjinha';
+            // Offers arrive pre-sorted (healthy first, then cheapest)
+            const isUnstable = offer.provider.health_status === 'unstable';
+            const isRecommended = offerIndex === 0 && !isUnstable && service.offers.length > 1;
             const currentDDD = selectedDDD || 'Qualquer';
             
             let displayPrice = Number(offer.sale_price);
@@ -75,6 +78,11 @@ const ServiceCardItem = React.memo(({
                     </button>
                   </div>
                 </div>
+                {(isRecommended || isUnstable) && (
+                  <div className={`offer-health-tag ${isUnstable ? 'unstable' : 'recommended'}`}>
+                    {isUnstable ? 'Instável no momento' : 'Recomendado'}
+                  </div>
+                )}
                 {hasStock ? (
                   <div className="offer-stock badge-available">
                     <Package size={12} />
