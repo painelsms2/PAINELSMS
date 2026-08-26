@@ -351,6 +351,28 @@ const AdminProviders = () => {
                         </td>
                         <td className="text-right">
                           <button 
+                            className={`btn-icon ${provider.active ? 'text-warning' : 'text-success'}`}
+                            onClick={async () => {
+                              const newStatus = !provider.active;
+                              if (!window.confirm(`Deseja ${newStatus ? 'ativar' : 'pausar'} o fornecedor ${provider.name}? ${!newStatus ? 'Todos os serviços dele sairão do catálogo temporariamente.' : 'Os serviços voltarão ao catálogo com os mesmos preços.'}`)) return;
+                              
+                              const { error } = await supabase.from('providers').update({ active: newStatus }).eq('id', provider.id);
+                              if (!error) {
+                                addToast(`Fornecedor ${newStatus ? 'ativado' : 'pausado'}`, 'success');
+                                fetchProviders();
+                              } else {
+                                addToast('Erro ao alterar status', 'error');
+                              }
+                            }}
+                            title={provider.active ? 'Pausar fornecedor (Ocultar do catálogo)' : 'Ativar fornecedor (Mostrar no catálogo)'}
+                          >
+                            {provider.active ? (
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                            ) : (
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            )}
+                          </button>
+                          <button 
                             className="btn-icon text-primary" 
                             onClick={() => handleSyncServices(provider)} 
                             disabled={syncingId === provider.id || !provider.active}
@@ -358,10 +380,10 @@ const AdminProviders = () => {
                           >
                             {syncingId === provider.id ? <Loader2 size={16} className="spin" /> : <RefreshCw size={16} />}
                           </button>
-                          <button className="btn-icon" onClick={() => handleEditClick(provider)}>
+                          <button className="btn-icon" onClick={() => handleEditClick(provider)} title="Editar">
                             <Edit2 size={16} />
                           </button>
-                          <button className="btn-icon text-danger" onClick={() => handleDelete(provider.id)}>
+                          <button className="btn-icon text-danger" onClick={() => handleDelete(provider.id)} title="Excluir">
                             <Trash2 size={16} />
                           </button>
                         </td>
