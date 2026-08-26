@@ -123,7 +123,7 @@ const AdminProviders = () => {
 
         if (localSvc) {
           // Check if offer exists
-          const { data: existing } = await supabase.from('service_offers').select('*').eq('service_id', localSvc.id).eq('provider_id', provider.id).single();
+          const { data: existing } = await supabase.from('service_offers').select('*').eq('service_id', localSvc.id).eq('provider_id', provider.id).maybeSingle();
           
           if (existing) {
             // Update cost and stock

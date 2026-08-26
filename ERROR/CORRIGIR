@@ -1,0 +1,940 @@
+sgwjhwhcpzkonrcfrmvm.supabase.co/auth/v1/token?grant_type=password:1  Failed to load resource: the server responded with a status of 400 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.abc&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.kc&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.vm&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.jq&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.tx&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.bos&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.auh&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.afz&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.aop&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.awv&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.bqo&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.akd&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.apd&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.blx&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.aav&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.bte&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.bgv&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.arp&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.abe&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.ul&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.als&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.kk&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.bpz&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.bpc&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.pz&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.ahd&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.agg&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.aiv&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.bli&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.aeu&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.bss&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.nq&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/service_offers?select=*&service_id=eq.rr&provider_id=eq.a1586483-c6f5-4725-9bba-54f41baf0d9e:1  Failed to load resource: the server responded with a status of 406 ()
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 27 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 34 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 12 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 13 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 14 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 15 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 16 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 41 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 42 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 43 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 19 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 21 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 22 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 24 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 27 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 28 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 48 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 49 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 51 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 53 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 54 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 34 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 55 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 35 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 61 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 37 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 13 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 38 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 14 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 41 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 15 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 63 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 64 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 65 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 43 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 18 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 44 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 67 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 45 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 68 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 46 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 47 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 48 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 22 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 24 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 49 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 27 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 51 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 13 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 28 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 53 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 14 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 31 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 15 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 32 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 55 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 16 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 33 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 61 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 17 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 62 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 18 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 79 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 63 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 19 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 35 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 64 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 21 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 37 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 22 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 38 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 24 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 66 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 27 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 67 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 28 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 42 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 68 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 31 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 43 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 71 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 74 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 87 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 88 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 77 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 79 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 81 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 92 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 41 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 42 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 94 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 53 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 54 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 85 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 97 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 98 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 61 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 62 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 64 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 47 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 91 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 92 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 93 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 71 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 54 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 97 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 73 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+index-BX6R6di-.js:134 Probe failed for DDD 55 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 98 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 74 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 61 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 99 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 75 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 77 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 62 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 79 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 81 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 63 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 64 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 82 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 65 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 83 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 84 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 66 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 85 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 67 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 68 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 86 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 69 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 87 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 88 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 71 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 73 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 89 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 91 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 74 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 75 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 92 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 77 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 93 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 94 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 79 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 81 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 95 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 96 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 82 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 83 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 97 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 84 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+index-BX6R6di-.js:134 Probe failed for DDD 98 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 99 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 85 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 86 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 87 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 88 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 89 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 91 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 92 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 93 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 94 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 95 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 96 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 97 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:134 Probe failed for DDD 98 Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+/api/provider:1  Failed to load resource: the server responded with a status of 429 ()
+index-BX6R6di-.js:134 Probe failed for DDD 99 Error: Global probe limit reached. Try again later.
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async D (index-BX6R6di-.js:134:12586)
+D @ index-BX6R6di-.js:134
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:66 Erro ao comprar número: Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async Object.purchaseNumber (index-BX6R6di-.js:66:1092)
+    at async T (index-BX6R6di-.js:69:7109)
+purchaseNumber @ index-BX6R6di-.js:66
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:66 Erro ao comprar número: Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async Object.purchaseNumber (index-BX6R6di-.js:66:1092)
+    at async T (index-BX6R6di-.js:69:7109)
+purchaseNumber @ index-BX6R6di-.js:66
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:66 Erro ao comprar número: Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async Object.purchaseNumber (index-BX6R6di-.js:66:1092)
+    at async T (index-BX6R6di-.js:69:7109)
+purchaseNumber @ index-BX6R6di-.js:66
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
+/api/provider:1  Failed to load resource: the server responded with a status of 500 ()
+index-BX6R6di-.js:66 Erro ao comprar número: Error: SMS24H Error: LIMITED_ACTIVATIONS
+    at Object.invokeProvider (index-BX6R6di-.js:66:933)
+    at async Object.purchaseNumber (index-BX6R6di-.js:66:1092)
+    at async T (index-BX6R6di-.js:69:7109)
+purchaseNumber @ index-BX6R6di-.js:66
+sgwjhwhcpzkonrcfrmvm.supabase.co/rest/v1/notifications?select=*&order=created_at.desc&limit=50:1  Failed to load resource: the server responded with a status of 404 ()
+index-BX6R6di-.js:59 Error getting notifications: Object
+getNotifications @ index-BX6R6di-.js:59
