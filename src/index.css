@@ -1,18 +1,62 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* 
+================================================================================
+STRICT THEME RULE:
+No component may hardcode a color (e.g., `background: white` or `color: #000`).
+Every background, text, and border color MUST reference a CSS variable below.
+================================================================================
+*/
 
-:root {
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root, [data-theme='light'] {
   /* Primary Orange Palette */
   --primary-color: #FF6B00;
   --primary-hover: #E66000;
-  --primary-light: #FFF0E5; /* Very subtle orange tint */
+  --primary-light: #FFF0E5;
   --primary-dark: #CC5500;
+  --accent-color: #FF6B00;
   
-  /* Neutrals */
-  --bg-color: #ffffff;
-  --bg-alt: #FAFAFA; /* Warmer, softer gray */
-  --text-main: #18181B; /* Zinc 900 for a more premium dark neutral */
-  --text-muted: #71717A; /* Zinc 500 */
-  --border-color: #E4E4E7; /* Zinc 200 */
+  /* Secondary Accents for Landing Page */
+  --accent-amber: #FFB000;
+  --accent-ember: #E03C00;
+
+  /* Typography */
+  --font-display: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  
+  
+  /* Surfaces & Backgrounds */
+  --bg-page: #FAFAFA;
+  --bg-color: var(--bg-page); /* Legacy alias */
+  --bg-alt: #F4F4F5;
+  --surface-bg: #ffffff;
+  --card-bg: var(--surface-bg); /* Legacy alias */
+  
+  /* Topbar */
+  --topbar-bg: linear-gradient(135deg, rgba(255, 107, 0, 0.95) 0%, rgba(255, 140, 0, 0.85) 100%);
+  --topbar-backdrop: blur(20px);
+  --topbar-border-top: 1px solid rgba(255, 255, 255, 0.4);
+  --topbar-border-bottom: none;
+  --topbar-shadow: 0 10px 30px rgba(255, 107, 0, 0.15), 0 4px 12px rgba(255, 107, 0, 0.1);
+  --topbar-text: #ffffff;
+  
+  --service-card-bg: #ffffff;
+  --service-card-border: var(--border-color);
+  --service-card-border-left: rgba(255, 107, 0, 0.35);
+  --service-card-border-width: 1px;
+  --service-card-hover-border: rgba(255, 107, 0, 0.3);
+  --service-card-hover-border-left: rgba(255, 107, 0, 0.7);
+  --service-card-hover-shadow: 0 8px 24px rgba(255, 107, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04);
+  
+  /* Text */
+  --text-primary: #18181B;
+  --text-main: var(--text-primary); /* Legacy alias */
+  --text-secondary: #71717A;
+  --text-muted: var(--text-secondary); /* Legacy alias */
+  --text-on-accent: #18181B; /* Text on service-card */
+  
+  /* Borders */
+  --border-color: #E4E4E7;
   
   /* Status Colors */
   --success-color: #10B981;
@@ -26,9 +70,9 @@
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-  --shadow-glow: 0 0 35px rgba(255, 107, 0, 0.5); /* Efeito de brilho laranja mais forte e visível */
+  --shadow-glow: 0 0 35px rgba(255, 107, 0, 0.5);
   
-  /* Borders & Radii (Slightly more rounded for a modern feel) */
+  /* Borders & Radii */
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
@@ -39,22 +83,116 @@
   --header-height: 70px;
 }
 
+[data-theme='dark'] {
+  /* Surfaces & Backgrounds */
+  --bg-page: #09090B;
+  --bg-color: var(--bg-page); /* Legacy alias */
+  --bg-alt: #18181B; /* Actually, we need contrast. Let's make bg-alt 18181B */
+  --surface-bg: #18181B; /* And surface 18181B */
+  --card-bg: var(--surface-bg);
+  
+  /* Topbar */
+  --topbar-bg: rgba(24, 24, 27, 0.75);
+  --topbar-backdrop: blur(16px);
+  --topbar-border-top: 1px solid rgba(255, 255, 255, 0.05);
+  --topbar-border-bottom: 1px solid rgba(255, 107, 0, 0.25);
+  --topbar-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+  --topbar-text: #ffffff;
+
+  --service-card-bg: #262626; /* Dark surface distinct from page bg */
+  --service-card-border: var(--primary-color);
+  --service-card-border-left: var(--primary-color);
+  --service-card-border-width: 1.5px;
+  --service-card-hover-border: #FF8C33; /* Brightens on hover */
+  --service-card-hover-border-left: #FF8C33;
+  --service-card-hover-shadow: 0 0 20px rgba(255, 107, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.5);
+  
+  /* Text */
+  --text-primary: #FAFAFA;
+  --text-main: var(--text-primary);
+  --text-secondary: #A1A1AA;
+  --text-muted: var(--text-secondary);
+  --text-on-accent: #ffffff;
+  
+  /* Borders */
+  --border-color: #27272A;
+
+  /* Primary */
+  --primary-light: rgba(255, 107, 0, 0.1);
+
+  /* Adjust Shadows for Dark Mode */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 0 35px rgba(255, 107, 0, 0.3);
+}
+
 html {
   scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--bg-color);
+  font-family: var(--font-body);
+  background-color: var(--bg-alt);
   color: var(--text-main);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6, .display-font {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Unified Background: Soft warm glow replacing all scattered backgrounds */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: -10;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% -10%, var(--primary-light) 0%, transparent 60%);
+}
+
+/* Immersive Page Transitions */
+.page-transition {
+  animation: pageEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageEnter {
+  0% { opacity: 0; transform: translateY(12px) scale(0.995); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 a {
@@ -159,8 +297,45 @@ button {
 .gap-8 { gap: 2rem; }
 
 /* Responsive utility */
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   .section {
     padding: 3rem 0;
   }
+}
+
+/* ==========================================================================
+   GLOBAL RESPONSIVE BREAKPOINTS & UTILITIES
+   Mobile: < 640px
+   Tablet: 640px - 1023px
+   Desktop: >= 1024px
+   ========================================================================== */
+
+/* Hide on mobile (< 640px) */
+@media (max-width: 639px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+/* Show ONLY on mobile (< 640px) */
+.show-mobile {
+  display: none !important;
+}
+@media (max-width: 639px) {
+  .show-mobile {
+    display: flex !important; /* Or block, but flex is safer for icons */
+  }
+}
+
+/* Touch targets & Form Inputs (Mobile First) */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="date"],
+select,
+textarea,
+.btn {
+  min-height: 44px; /* Apple/Android accessibility touch target minimum */
 }

@@ -23,20 +23,27 @@ const HowItWorks = () => {
     <section className="section how-it-works" id="como-funciona">
       <div className="container">
         <div className="section-header text-center">
-          <h2 className="section-title">Como funciona</h2>
+          <h2 className="section-title display-font">Como funciona</h2>
           <p className="section-subtitle text-muted">
             Receber seu código de verificação é simples e rápido. Siga os três passos abaixo:
           </p>
         </div>
 
-        <div className="steps-container">
-          {steps.map((step, index) => (
-            <div key={index} className="step-card">
-              <div className="step-number">{step.number}</div>
-              <h3 className="step-title">{step.title}</h3>
-              <p className="step-description text-muted">{step.description}</p>
-            </div>
-          ))}
+        <div className="timeline-container">
+          <div className="timeline-line"></div>
+          <div className="timeline-steps">
+            {steps.map((step, index) => (
+              <div key={index} className="timeline-step fade-in" style={{ animationDelay: `${index * 0.2}s` }}>
+                <div className="timeline-number-wrapper">
+                  <div className="timeline-number display-font">{step.number}</div>
+                </div>
+                <div className="timeline-content">
+                  <h3 className="timeline-title display-font">{step.title}</h3>
+                  <p className="timeline-description">{step.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

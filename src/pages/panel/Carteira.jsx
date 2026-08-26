@@ -158,8 +158,8 @@ const Carteira = () => {
   const isExpired = activeCharge?.status === 'expired' || (timeLeft === 0 && activeCharge?.status !== 'completed');
 
   return (
-    <div className="carteira-page">
-      <div className="page-header">
+    <div className="carteira-page page-transition">
+      <div className="servicos-header-wrapper fade-in">
         <h1 className="page-title">Carteira</h1>
         <p className="text-muted">Adicione saldo via Pix para comprar números virtuais.</p>
       </div>

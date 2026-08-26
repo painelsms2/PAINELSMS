@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { Plus, MessageCircle } from 'lucide-react';
 import './FaqSection.css';
 
 const faqs = [
@@ -39,34 +39,46 @@ const FaqSection = () => {
   return (
     <section id="faq" className="faq-section">
       <div className="container">
-        <div className="section-header text-center">
-          <h2 className="section-title">Perguntas Frequentes (FAQ)</h2>
-          <p className="section-subtitle">Tire suas dúvidas sobre o PainelSMS antes de começar.</p>
-        </div>
+        <div className="faq-layout">
+          <div className="faq-left-col">
+            <span className="faq-eyebrow">FAQ</span>
+            <h2 className="section-title display-font">Perguntas Frequentes</h2>
+            <p className="section-subtitle">Tire suas dúvidas sobre o SMSfacil antes de começar.</p>
 
-        <div className="faq-accordion">
-          {faqs.map((faq, index) => {
-            const isOpen = openIndex === index;
-            
-            return (
-              <div key={index} className={`faq-item ${isOpen ? 'open' : ''}`}>
-                <button 
-                  className="faq-question" 
-                  onClick={() => toggleAccordion(index)}
-                  aria-expanded={isOpen}
-                >
-                  {faq.question}
-                  <ChevronDown className={`faq-icon ${isOpen ? 'rotate' : ''}`} />
-                </button>
-                <div 
-                  className="faq-answer-wrapper"
-                  style={{ maxHeight: isOpen ? '200px' : '0' }}
-                >
-                  <p className="faq-answer">{faq.answer}</p>
-                </div>
+            <a href="#comecar" className="faq-support-card">
+              <div className="faq-support-icon">
+                <MessageCircle size={20} />
               </div>
-            );
-          })}
+              <div>
+                <div className="faq-support-title">Ainda com dúvidas?</div>
+                <div className="faq-support-text">Fale com nosso suporte</div>
+              </div>
+            </a>
+          </div>
+
+          <div className="faq-right-col">
+            {faqs.map((faq, index) => {
+              const isOpen = openIndex === index;
+
+              return (
+                <div key={index} className={`faq-item ${isOpen ? 'open' : ''}`}>
+                  <button
+                    className="faq-question display-font"
+                    onClick={() => toggleAccordion(index)}
+                    aria-expanded={isOpen}
+                  >
+                    <span>{faq.question}</span>
+                    <span className="faq-icon-wrap">
+                      <Plus className={`faq-icon ${isOpen ? 'rotate' : ''}`} size={18} />
+                    </span>
+                  </button>
+                  <div className="faq-answer-wrapper">
+                    <p className="faq-answer">{faq.answer}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

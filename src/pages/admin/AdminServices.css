@@ -63,7 +63,7 @@
   width: 18px;
   left: 3px;
   bottom: 3px;
-  background-color: white;
+  background-color: var(--surface-bg);
   transition: .3s;
   border-radius: 50%;
 }
@@ -92,10 +92,62 @@ input:checked + .toggle-slider:before {
 
 .save-btn:hover {
   background-color: var(--primary-color);
-  color: white;
+  color: var(--text-on-accent);
 }
 
 .save-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* ==========================================================================
+   MOBILE STACKED CARDS FOR ADMIN TABLES
+   ========================================================================== */
+@media (max-width: 639px) {
+  .table-container {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  
+  .admin-table thead {
+    display: none;
+  }
+  
+  .admin-table,
+  .admin-table tbody,
+  .admin-table tr,
+  .admin-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table tr {
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--card-bg);
+  }
+  
+  .admin-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    text-align: right;
+  }
+  
+  .admin-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    margin-right: 1rem;
+    text-align: left;
+  }
+
+  .service-cell {
+    justify-content: flex-end;
+  }
 }

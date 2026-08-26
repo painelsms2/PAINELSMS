@@ -150,9 +150,10 @@ export const numberProviderService = {
       .select(`
         id, name, country, icon_file, active,
         offers:service_offers(
-          id, sale_price, stock, provider_service_code, is_default, active,
-          provider:providers(id, name, logo_key, active)
-        )
+          id, sale_price, stock, provider_service_code, is_default, active, provider_id,
+          provider:providers(id, name, logo_key, active, key)
+        ),
+        ddd_availability:service_ddd_availability(ddd, status, provider_id)
       `)
       .eq('active', true)
       .order('name');
@@ -177,21 +178,14 @@ export const numberProviderService = {
         name: s.name,
         country: s.country,
         icon: s.icon_file,
-        offers: activeOffers
+        offers: activeOffers,
+        ddd_availability: s.ddd_availability || []
       };
     });
 
     // Only return services that have at least one valid offer (to hide fully unavailable ones)
     return mapped.filter(s => {
       if (s.offers.length === 0) return false;
-      
-      // Filter out auto-created junk services (e.g. AAB, ABK, WA) from raw provider syncs
-      // A raw code is typically 2 to 4 uppercase letters and generally has no custom icon configured
-      const isRawCodePattern = /^[A-Z0-9_]{2,5}$/.test(s.name);
-      const isMissingIcon = !s.icon || s.icon.trim() === '';
-      if (isRawCodePattern && isMissingIcon) {
-        return false;
-      }
       
       return true;
     });
@@ -225,9 +219,14 @@ export const numberProviderService = {
     return data;
   },
 
-  async purchaseNumber(offer, serviceId) {
+  async purchaseNumber(offer, serviceId, ddd) {
     try {
-      const { activation } = await this.invokeProvider('buyNumber', { offerId: offer.id });
+      const payload = { offerId: offer.id };
+      if (ddd && ddd !== 'Qualquer') {
+        payload.ddd = ddd;
+      }
+      
+      const { activation } = await this.invokeProvider('buyNumber', payload);
       
       return {
         activationId: activation.id,
@@ -260,6 +259,40 @@ export const numberProviderService = {
     } catch (e) {
       console.error("Cancel error:", e);
       throw new Error("Erro ao cancelar número");
+    }
+  },
+
+  async getFavorites(userId) {
+    if (!userId) return new Set();
+    const { data, error } = await supabase
+      .from('user_favorites')
+      .select('service_id')
+      .eq('user_id', userId);
+    
+    if (error) {
+      console.error("Erro ao buscar favoritos", error);
+      return new Set();
+    }
+    return new Set(data.map(f => f.service_id));
+  },
+
+  async toggleFavorite(userId, serviceId, isCurrentlyFavorited) {
+    if (!userId) return false;
+    
+    if (isCurrentlyFavorited) {
+      const { error } = await supabase
+        .from('user_favorites')
+        .delete()
+        .eq('user_id', userId)
+        .eq('service_id', serviceId);
+      if (error) throw error;
+      return false;
+    } else {
+      const { error } = await supabase
+        .from('user_favorites')
+        .insert([{ user_id: userId, service_id: serviceId }]);
+      if (error) throw error;
+      return true;
     }
   }
 };

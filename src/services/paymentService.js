@@ -2,106 +2,64 @@ import { supabase } from '../lib/supabase';
 
 export const paymentService = {
   async createPixCharge(baseAmount, totalAmount, userId) {
-    const user = (await supabase.auth.getUser()).data.user;
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const session = await supabase.auth.getSession();
+    const token = session.data.session?.access_token;
+    
+    if (!token) throw new Error("Usuário não autenticado");
 
-    // 1. Chamar a API da Laranjinha
-    const response = await fetch('https://mqvdjjbkjglaimbnpcer.supabase.co/functions/v1/api-proxy/charges', {
+    const endpoint = isLocalhost ? 'http://localhost:3000/api/provider' : '/api/provider';
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
-        'X-API-Key': import.meta.env.VITE_LARANJINHA_API_KEY,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({
-        amount_cents: Math.round(totalAmount * 100),
-        description: `Recarga Painel SMS`,
-        payer: {
-          name: user?.user_metadata?.full_name || "Cliente Painel SMS",
-          email: user?.email || "cliente@painelsms.com",
-          document: "00000000000" // CPF Genérico aceito em teste
-        },
-        metadata: {
-          user_id: userId
-        }
+      body: JSON.stringify({ 
+        action: 'createPixCharge', 
+        baseAmount, 
+        totalAmount 
       })
     });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error("Erro na API Laranjinha:", errText);
-      throw new Error("Falha ao gerar cobrança com o banco (Gateway Error)");
-    }
-
-    const result = await response.json();
-    const charge = result.charge;
-
-    // 2. Inserir a transação 'pending' no Supabase usando o mesmo ID do gateway
-    // NOTE: We save `baseAmount` in the database so that when it succeeds, 
-    // the user gets exactly `baseAmount` in their balance, effectively paying the fee.
-    const { data, error } = await supabase
-      .from('transactions')
-      .insert({
-        id: charge.id, 
-        user_id: userId,
-        type: 'recharge',
-        amount: baseAmount,
-        status: 'pending',
-        method: 'pix'
-      })
-      .select()
-      .single();
-
-    if (error) {
-      console.error("Error inserting Pix charge in DB:", error);
-      throw new Error("Erro ao salvar cobrança no banco de dados");
+    
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Falha ao gerar cobrança");
     }
 
     // 3. Retornar os dados para o frontend desenhar o QR Code
-    return {
-      id: charge.id,
-      qrCode: charge.qr_code_image,
-      pixCode: charge.qr_code,
-      amount: baseAmount,
-      totalAmount: totalAmount,
-      status: 'pending',
-      expiresAt: new Date(charge.expires_at).getTime()
-    };
+    return data.charge;
   },
 
   async checkPaymentStatus(chargeId) {
     try {
-      // Consultar status direto no gateway Laranjinha
-      const response = await fetch(`https://mqvdjjbkjglaimbnpcer.supabase.co/functions/v1/api-proxy/charges/${chargeId}`, {
-        method: 'GET',
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const session = await supabase.auth.getSession();
+      const token = session.data.session?.access_token;
+      
+      if (!token) return 'pending';
+
+      const endpoint = isLocalhost ? 'http://localhost:3000/api/provider' : '/api/provider';
+      const response = await fetch(endpoint, {
+        method: 'POST',
         headers: {
-          'X-API-Key': import.meta.env.VITE_LARANJINHA_API_KEY
-        }
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ action: 'verifyPayment', chargeId })
       });
       
       if (response.ok) {
-        const result = await response.json();
-        const charge = result.charge || result; // Dependendo do formato do GET
-        
-        if (charge.status === 'paid') {
-          // Quando pago, validamos usando a função atômica (RPC) do Supabase
-          const { error } = await supabase.rpc('add_balance', {
-            p_transaction_id: chargeId
-          });
-
-          if (error) {
-             // O erro comum aqui é tentar adicionar de uma transação já concluída, o que é seguro.
-             console.error("Erro ao rodar RPC add_balance:", error);
-             return 'pending'; 
+        const data = await response.json();
+        if (data.success) {
+          if (data.status === 'expired' || data.status === 'failed') {
+            await this.updateTransactionStatus(chargeId, data.status);
           }
-          return 'completed';
-        }
-        
-        if (charge.status === 'expired' || charge.status === 'failed') {
-          await this.updateTransactionStatus(chargeId, charge.status);
-          return charge.status;
+          return data.status; // 'completed', 'pending', 'expired', etc.
         }
       }
     } catch (err) {
-      console.error("Error polling payment status:", err);
+      console.error("Error polling payment status via secure backend:", err);
     }
 
     // Fallback: se o gateway não responder, consulta o banco local

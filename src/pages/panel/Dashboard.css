@@ -6,12 +6,89 @@
   max-width: 1200px;
   margin: 0 auto;
 }
-
 .dashboard-main-tabs {
   display: flex;
   gap: 1rem;
   border-bottom: 2px solid var(--border-color);
   margin-bottom: 1rem;
+}
+
+/* Summary Strip */
+.dashboard-summary-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: var(--surface-bg);
+  border-radius: 20px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+}
+
+.sc-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255,107,0,0.1);
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sc-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  overflow: hidden;
+}
+
+.sc-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sc-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-main);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.sc-hint {
+  font-size: 0.75rem;
+  color: #10b981; /* Default to a success-ish color or override */
+  font-weight: 600;
+}
+
+.sc-teaser .sc-hint {
+  color: var(--text-muted);
+}
+
+/* Empty State Welcome */
+.empty-state-welcome {
+  box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 24px;
 }
 
 .main-tab-btn {
@@ -49,7 +126,7 @@
 
 .badge-count {
   background-color: var(--primary-color);
-  color: white;
+  color: var(--text-on-accent);
   font-size: 0.75rem;
   padding: 0.15rem 0.5rem;
   border-radius: var(--radius-full);
@@ -103,6 +180,11 @@
   flex: 1;
   min-width: 150px;
 }
+@media (max-width: 639px) {
+  .filter-group {
+    min-width: 100%;
+  }
+}
 
 .filter-group label {
   font-size: 0.85rem;
@@ -136,6 +218,16 @@
   align-items: center;
   gap: 0.5rem;
   min-width: 120px;
+}
+@media (max-width: 639px) {
+  .filter-actions {
+    min-width: 100%;
+    flex-direction: column;
+  }
+  .filter-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .btn-search {
@@ -172,8 +264,72 @@
   transition: background-color 0.2s ease;
 }
 
-.history-table tr:hover {
-  background-color: var(--primary-light-transparent, rgba(255, 107, 0, 0.03));
+.history-table tbody tr:hover {
+  background-color: var(--bg-page);
+}
+
+/* ==========================================================================
+   MOBILE STACKED CARDS FOR TABLE
+   ========================================================================== */
+@media (max-width: 639px) {
+  /* Hide the table header */
+  .history-table thead {
+    display: none;
+  }
+
+  /* Make table components block-level */
+  .history-table,
+  .history-table tbody,
+  .history-table tr,
+  .history-table td {
+    display: block;
+    width: 100%;
+  }
+
+  /* Style each row as a card */
+  .history-table tr {
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--surface-bg);
+    overflow: hidden;
+  }
+  
+  .history-table tbody tr:hover {
+    background-color: var(--surface-bg); /* Disable hover on mobile cards */
+  }
+
+  /* Style each cell as a flex row */
+  .history-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: right;
+  }
+  .history-table td:last-child {
+    border-bottom: none;
+  }
+
+  /* The data-label attribute acts as the left side label */
+  .history-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-right: 1rem;
+    text-align: left;
+    text-transform: uppercase;
+  }
+  
+  /* Reset center alignment for status cell */
+  .history-table td.text-center {
+    text-align: right;
+  }
+  .history-table td .flex-row-center {
+    justify-content: flex-end;
+  }
 }
 
 .history-table tr:hover .btn-copy-small {
@@ -269,7 +425,7 @@
   height: 32px;
   border-radius: var(--radius-md);
   background: var(--primary-color);
-  color: white;
+  color: var(--text-on-accent);
   font-weight: 700;
 }
 
@@ -289,66 +445,3 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* -------------------------------- */
-/* Responsive Cards layout for Table */
-/* -------------------------------- */
-@media (max-width: 768px) {
-  .history-table-container {
-    background: transparent;
-    box-shadow: none;
-    border-radius: 0;
-  }
-  
-  .history-table thead {
-    display: none;
-  }
-  
-  .history-table tbody {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .history-table tr {
-    display: flex;
-    flex-direction: column;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: 1rem;
-    box-shadow: var(--shadow-sm);
-  }
-  
-  .history-table td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--bg-alt);
-  }
-  
-  .history-table td:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-  
-  /* Add pseudo labels before data on mobile */
-  .history-table td::before {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-  
-  .history-table td:nth-child(1)::before { content: "ID"; }
-  .history-table td:nth-child(2)::before { content: "Data"; }
-  .history-table td:nth-child(3)::before { content: "Serviço"; }
-  .history-table td:nth-child(4)::before { content: "Número"; }
-  .history-table td:nth-child(5)::before { content: "SMS"; }
-  .history-table td:nth-child(6)::before { content: "Valor"; }
-  .history-table td:nth-child(7)::before { content: "Status"; }
-
-  .btn-copy-small {
-    opacity: 1; /* Always visible on mobile */
-  }
-}

@@ -4,7 +4,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { historyService } from '../../services/historyService';
 import { numberProviderService } from '../../services/numberProviderService';
 import Skeleton from '../../components/ui/Skeleton';
-import { MessageCircle, Send, Camera, Users, Globe, Music, MessageSquare, Car, Hash, Tv, X, Copy, CheckCircle2, History, Smile, Frown, Calendar, ChevronLeft, ChevronRight, Search, PlusCircle, SearchX } from 'lucide-react';
+import { MessageCircle, Send, Camera, Users, Globe, Music, MessageSquare, Car, Hash, Tv, X, Copy, CheckCircle2, History, Smile, Frown, Calendar, ChevronLeft, ChevronRight, Search, PlusCircle, SearchX, LayoutGrid, LayoutDashboard, Signal, ChevronDown, Wallet, Activity, TrendingUp, Star, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
@@ -149,6 +149,58 @@ const Dashboard = () => {
     return tabData;
   }, [historyItems, historyTabSelect, appliedFilters]);
 
+  // Calculate summary stats
+  const summaryStats = useMemo(() => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    const monthItems = historyItems.filter(item => {
+      const date = new Date(item.timestamp || item.createdAt);
+      return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+    });
+
+    const monthActivations = monthItems.length;
+    const monthSuccess = monthItems.filter(item => item.status === 'completed').length;
+    
+    const monthSpend = monthItems.reduce((acc, item) => {
+      // Only sum up if it was actually spent (completed). Wait, balance is deducted on creation, refunded on cancel.
+      // So spent = waiting + completed. Cancelled = refunded.
+      if (item.status === 'completed' || item.status === 'waiting') {
+        const price = item.price || item.service?.price || 0;
+        return acc + Number(price);
+      }
+      return acc;
+    }, 0);
+
+    // Most used service
+    const serviceCounts = {};
+    historyItems.forEach(item => {
+      const sName = item.serviceName || item.service?.name;
+      if (sName) {
+        serviceCounts[sName] = (serviceCounts[sName] || 0) + 1;
+      }
+    });
+    
+    let mostUsed = { name: '-', count: 0 };
+    Object.entries(serviceCounts).forEach(([name, count]) => {
+      if (count > mostUsed.count) {
+        mostUsed = { name, count };
+      }
+    });
+
+    // Last activation
+    const lastItem = historyItems.length > 0 ? historyItems[0] : null;
+
+    return {
+      monthActivations,
+      monthSuccess,
+      monthSpend,
+      mostUsed,
+      lastItem
+    };
+  }, [historyItems]);
+
   const totalPages = Math.ceil(filteredHistory.length / itemsPerPage) || 1;
   const paginatedHistory = filteredHistory.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
@@ -178,31 +230,99 @@ const Dashboard = () => {
   const hasActive = activeActivations.length > 0;
 
   return (
-    <div className="dashboard-page">
-      <div className="page-header">
+    <div className="dashboard-page page-transition">
+
+      <div className="page-header" style={{ marginTop: 0, marginBottom: '2rem' }}>
         <h1 className="page-title">Dashboard</h1>
         <p className="text-muted">Acompanhe seus números em tempo real e consulte o histórico.</p>
       </div>
 
-      {/* Primary Dashboard Tabs */}
-      <div className="dashboard-main-tabs">
-        {hasActive && (
-          <button 
-            className={`main-tab-btn ${activeTab === 'ativacoes' ? 'active' : ''}`}
-            onClick={() => setActiveTab('ativacoes')}
-          >
-            Ativações em andamento <span className="badge-count">{activeActivations.length}</span>
+      {/* Zero State for brand new users */}
+      {!isLoading && historyItems.length === 0 && activeActivations.length === 0 ? (
+        <div className="empty-state-welcome fade-in card text-center" style={{ padding: '4rem 2rem' }}>
+          <div style={{ display: 'inline-flex', padding: '1.5rem', background: 'rgba(255,107,0,0.1)', borderRadius: '50%', marginBottom: '1.5rem', color: 'var(--primary-color)' }}>
+            <MessageSquare size={48} />
+          </div>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.5rem' }}>Bem-vindo ao Dashboard!</h2>
+          <p className="text-muted" style={{ maxWidth: '400px', margin: '0 auto 2rem auto', fontSize: '1.1rem' }}>Você ainda não ativou nenhum número. Comece explorando nossos serviços disponíveis.</p>
+          <button className="btn btn-primary" style={{ padding: '0.75rem 2rem', fontSize: '1.1rem', borderRadius: '99px' }} onClick={() => navigate('/panel/servicos')}>
+            Ver Serviços Disponíveis
           </button>
-        )}
-        <button 
-          className={`main-tab-btn ${activeTab === 'historico' ? 'active' : ''}`}
-          onClick={() => setActiveTab('historico')}
-        >
-          Histórico
-        </button>
-      </div>
+        </div>
+      ) : (
+        <>
+          {/* Quick Summary Strip */}
+          <div className="dashboard-summary-strip fade-in">
+            <div className="summary-card">
+              <div className="sc-icon"><Wallet size={20} /></div>
+              <div className="sc-info">
+                <span className="sc-label">Saldo Atual</span>
+                <span className="sc-value">R$ {Number(user?.balance || 0).toFixed(2)}</span>
+              </div>
+            </div>
+            
+            <div className="summary-card">
+              <div className="sc-icon" style={{ color: '#8b5cf6', background: 'rgba(139,92,246,0.1)' }}><Activity size={20} /></div>
+              <div className="sc-info">
+                <span className="sc-label">Ativações no Mês</span>
+                <span className="sc-value">{isLoading ? <Skeleton width="40px" height="24px" /> : summaryStats.monthActivations}</span>
+                {!isLoading && summaryStats.monthActivations > 0 && (
+                  <span className="sc-hint">{summaryStats.monthSuccess} com sucesso</span>
+                )}
+              </div>
+            </div>
 
-      <div className="dashboard-content">
+            <div className="summary-card">
+              <div className="sc-icon" style={{ color: '#ef4444', background: 'rgba(239,68,68,0.1)' }}><TrendingUp size={20} /></div>
+              <div className="sc-info">
+                <span className="sc-label">Gasto no Mês</span>
+                <span className="sc-value">R$ {isLoading ? <Skeleton width="60px" height="24px" /> : summaryStats.monthSpend.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <div className="summary-card">
+              <div className="sc-icon" style={{ color: '#f59e0b', background: 'rgba(245,158,11,0.1)' }}><Star size={20} /></div>
+              <div className="sc-info">
+                <span className="sc-label">Mais Usado</span>
+                <span className="sc-value" style={{ fontSize: '1.1rem' }}>{isLoading ? <Skeleton width="80px" height="24px" /> : summaryStats.mostUsed.name}</span>
+                {!isLoading && summaryStats.mostUsed.count > 0 && (
+                  <span className="sc-hint">{summaryStats.mostUsed.count} vezes</span>
+                )}
+              </div>
+            </div>
+            
+            {/* Optional Recent Teaser */}
+            {!isLoading && summaryStats.lastItem && (
+              <div className="summary-card sc-teaser">
+                <div className="sc-icon" style={{ color: '#10b981', background: 'rgba(16,185,129,0.1)' }}><Clock size={20} /></div>
+                <div className="sc-info">
+                  <span className="sc-label">Última Ativação</span>
+                  <span className="sc-value" style={{ fontSize: '1.1rem' }}>{summaryStats.lastItem.serviceName || summaryStats.lastItem.service?.name}</span>
+                  <span className="sc-hint">{formatDate(summaryStats.lastItem.timestamp || summaryStats.lastItem.createdAt)}</span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Primary Dashboard Tabs */}
+          <div className="dashboard-main-tabs" style={{ marginTop: '1rem' }}>
+            {hasActive && (
+              <button 
+                className={`main-tab-btn ${activeTab === 'ativacoes' ? 'active' : ''}`}
+                onClick={() => setActiveTab('ativacoes')}
+              >
+                Ativações em andamento <span className="badge-count">{activeActivations.length}</span>
+              </button>
+            )}
+            <button 
+              className={`main-tab-btn ${activeTab === 'historico' ? 'active' : ''}`}
+              onClick={() => setActiveTab('historico')}
+            >
+              Histórico
+            </button>
+          </div>
+
+          <div className="dashboard-content">
         
         {/* TAB: ATIVAÇÕES */}
         {activeTab === 'ativacoes' && hasActive && (
@@ -313,16 +433,16 @@ const Dashboard = () => {
                         
                         return (
                           <tr key={item.activationId || item.id}>
-                            <td className="text-muted font-mono">{idHash}</td>
-                            <td className="text-muted">{date}</td>
-                            <td className="font-semibold">{sName}</td>
-                            <td>
+                            <td data-label="#" className="text-muted font-mono">{idHash}</td>
+                            <td data-label="Dia da compra" className="text-muted">{date}</td>
+                            <td data-label="Serviço" className="font-semibold">{sName}</td>
+                            <td data-label="Número alugado">
                               <div className="flex-row-center" style={{ gap: '0.5rem' }}>
                                 <span className="monospace-text">{phone}</span>
                                 <button className="btn-copy-small" onClick={() => copyToClipboard(phone, 'Número')}><Copy size={14} /></button>
                               </div>
                             </td>
-                            <td>
+                            <td data-label="SMS">
                               {code ? (
                                 <div className="flex-row-center" style={{ gap: '0.5rem' }}>
                                   <span className="font-semibold text-main">{code}</span>
@@ -330,8 +450,8 @@ const Dashboard = () => {
                                 </div>
                               ) : <span className="text-muted">-</span>}
                             </td>
-                            <td>R$ {Number(price || 0).toFixed(2)}</td>
-                            <td className="text-center">{getStatusFace(item.status)}</td>
+                            <td data-label="Valor">R$ {Number(price || 0).toFixed(2)}</td>
+                            <td data-label="Status" className="text-center">{getStatusFace(item.status)}</td>
                           </tr>
                         );
                       })
@@ -353,7 +473,9 @@ const Dashboard = () => {
             </div>
           </div>
         )}
-      </div>
+        </div>
+        </>
+      )}
     </div>
   );
 };

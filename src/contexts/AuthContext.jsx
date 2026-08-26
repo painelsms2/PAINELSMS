@@ -33,14 +33,14 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  const login = async (email, password) => {
-    const session = await authService.login(email, password);
+  const login = async (email, password, captchaToken = null) => {
+    const session = await authService.login(email, password, captchaToken);
     setUser(session.user);
     return session.user;
   };
 
-  const register = async (name, email, password) => {
-    const session = await authService.register(name, email, password);
+  const register = async (name, email, password, captchaToken = null) => {
+    const session = await authService.register(name, email, password, captchaToken);
     setUser(session.user);
     return session.user;
   };

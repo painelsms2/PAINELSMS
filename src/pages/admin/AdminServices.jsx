@@ -37,7 +37,8 @@ const AdminServices = () => {
       const [svcRes, provRes] = await Promise.all([
         supabase.from('services').select(`
           id, name, country, icon_file, active,
-          offers:service_offers(*, provider:providers(id, name, logo_key))
+          offers:service_offers(*, provider:providers(id, name, logo_key, key)),
+          ddd_availability:service_ddd_availability(ddd, status, provider_id)
         `).order('name'),
         supabase.from('providers').select('*').eq('active', true).order('name')
       ]);
@@ -429,6 +430,9 @@ const ServiceOffersManager = ({ service, providers, onRefresh, addToast, bestDea
   const [newOffer, setNewOffer] = useState({ provider_id: '', provider_service_code: '', cost_price: 0, sale_price: 0, stock: 100, active: true, price_locked: false });
   const [edits, setEdits] = useState({});
   const [savingId, setSavingId] = useState(null);
+  
+  const [isProbingId, setIsProbingId] = useState(null);
+  const [probeProgress, setProbeProgress] = useState({ current: 0, total: 0 });
 
   const formatCurrency = (val) => Number(val || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
@@ -503,6 +507,32 @@ const ServiceOffersManager = ({ service, providers, onRefresh, addToast, bestDea
       addToast("Fornecedor removido", "success");
       onRefresh();
     }
+  };
+
+  const handleProbeDdds = async (offerId) => {
+    const ddds = [11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 24, 27, 28, 31, 32, 33, 34, 35, 37, 38, 41, 42, 43, 44, 45, 46, 47, 48, 49, 51, 53, 54, 55, 61, 62, 63, 64, 65, 66, 67, 68, 69, 71, 73, 74, 75, 77, 79, 81, 82, 83, 84, 85, 86, 87, 88, 89, 91, 92, 93, 94, 95, 96, 97, 98, 99];
+    if (!window.confirm(`Deseja sondar todos os ${ddds.length} DDDs no fornecedor real? Isso demorará alguns segundos.`)) return;
+
+    setIsProbingId(offerId);
+    setProbeProgress({ current: 0, total: ddds.length });
+
+    // Assuming we can import numberProviderService to call invokeProvider
+    const { numberProviderService } = await import('../../services/numberProviderService.js');
+    
+    for (let i = 0; i < ddds.length; i++) {
+      setProbeProgress({ current: i + 1, total: ddds.length });
+      try {
+        await numberProviderService.invokeProvider('probeDdd', { offerId, ddd: ddds[i].toString() });
+      } catch (err) {
+        console.error("Probe failed for DDD", ddds[i], err);
+      }
+      // rate-limit 500ms
+      await new Promise(r => setTimeout(r, 500));
+    }
+
+    addToast("Sondagem de DDD concluída!", "success");
+    setIsProbingId(null);
+    onRefresh(); // To reload ddd_availability
   };
 
   // Find the actual best cost_price for the delta metric
@@ -664,6 +694,28 @@ const ServiceOffersManager = ({ service, providers, onRefresh, addToast, bestDea
                     <div className={profit > 0 ? 'text-success' : 'text-danger'} style={{ fontWeight: 'bold', fontSize: '0.85rem' }}>{profitPercent.toFixed(1)}%</div>
                   </div>
                 </div>
+
+                {/* Probe DDD Section (Only if SMS24H/Laranjinha) */}
+                {(offer.provider?.key?.toLowerCase() === 'sms24h' || offer.provider?.key?.toLowerCase() === 'laranjinha') && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,165,0,0.1)', padding: '0.5rem', borderRadius: '6px' }}>
+                    <div>
+                      <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>DDDs mapeados</div>
+                      <div style={{ fontWeight: 'bold', fontSize: '0.8rem', color: 'var(--primary-color)' }}>
+                        {(service.ddd_availability || []).filter(d => d.provider_id === offer.provider_id && d.status === 'available').length} ativos
+                      </div>
+                    </div>
+                    {isProbingId === offer.id ? (
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Loader2 size={12} className="spin" />
+                        {probeProgress.current}/{probeProgress.total}
+                      </div>
+                    ) : (
+                      <button className="btn btn-outline" style={{ padding: '0.2rem 0.5rem', fontSize: '0.7rem', borderColor: 'var(--primary-color)', color: 'var(--primary-color)' }} onClick={() => handleProbeDdds(offer.id)}>
+                        Sondar DDDs
+                      </button>
+                    )}
+                  </div>
+                )}
 
                 {/* Footer Controls */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: '0.5rem', borderTop: '1px solid var(--border-color)' }}>

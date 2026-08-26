@@ -156,7 +156,7 @@ const AdminUsers = () => {
               ) : (
                 filteredUsers.map(u => (
                   <tr key={u.id}>
-                    <td>
+                    <td data-label="Usuário">
                       <div className="user-cell">
                         <div className="user-avatar-small">
                           {u.full_name?.charAt(0).toUpperCase() || 'U'}
@@ -167,20 +167,20 @@ const AdminUsers = () => {
                         </div>
                       </div>
                     </td>
-                    <td>
+                    <td data-label="Permissão">
                       <span className={`status-badge ${u.role === 'admin' ? 'admin' : ''}`}>
                         {u.role}
                       </span>
                     </td>
-                    <td>
+                    <td data-label="Status">
                       <span className={`status-badge ${u.status === 'suspended' ? 'suspended' : 'active'}`}>
                         {u.status === 'suspended' ? 'Suspenso' : 'Ativo'}
                       </span>
                     </td>
-                    <td className="font-semibold">
+                    <td data-label="Saldo" className="font-semibold">
                       {formatCurrency(u.balance)}
                     </td>
-                    <td>
+                    <td data-label="Ações">
                       <div className="action-buttons">
                         <button 
                           className="btn-icon" 

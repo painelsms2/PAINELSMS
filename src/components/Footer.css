@@ -21,6 +21,7 @@
 .footer-brand .logo-text {
   display: inline-block;
   margin-bottom: 1rem;
+  color: var(--primary-color);
 }
 
 .footer-description {

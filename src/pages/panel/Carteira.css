@@ -20,7 +20,7 @@
 /* Balance Card */
 .balance-card {
   background: linear-gradient(135deg, var(--primary-color), #60a5fa);
-  color: white;
+  color: var(--text-on-accent);
   border-radius: var(--radius-lg);
   padding: 2rem;
   display: flex;
@@ -242,7 +242,7 @@
   font-size: 2.5rem;
   font-weight: 700;
   text-align: center;
-  color: #10b981;
+  color: var(--success-color);
   margin-bottom: 1.5rem;
 }
 
@@ -306,7 +306,7 @@
 }
 
 .success-icon-wrapper {
-  color: #10b981;
+  color: var(--success-color);
   animation: scaleIn 0.3s ease-out;
 }
 

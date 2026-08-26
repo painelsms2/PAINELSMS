@@ -173,3 +173,61 @@
   border-color: #10b981;
   color: #10b981;
 }
+
+/* ==========================================================================
+   MOBILE STACKED CARDS FOR ADMIN TABLES
+   ========================================================================== */
+@media (max-width: 639px) {
+  .table-container {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  
+  .admin-table thead {
+    display: none;
+  }
+  
+  .admin-table,
+  .admin-table tbody,
+  .admin-table tr,
+  .admin-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table tr {
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--card-bg);
+  }
+  
+  .admin-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    text-align: right;
+  }
+  
+  .admin-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    margin-right: 1rem;
+    text-align: left;
+  }
+
+  /* Make user info block wrap if necessary */
+  .user-cell {
+    text-align: right;
+  }
+  
+  /* Reset action buttons alignment */
+  .action-buttons {
+    justify-content: flex-end;
+  }
+}

@@ -13,11 +13,13 @@ const AdminDashboard = () => {
   const { addToast } = useToast();
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [period, setPeriod] = useState('mes');
 
   useEffect(() => {
     const fetchMetrics = async () => {
+      setIsLoading(true);
       try {
-        const { data: result, error } = await supabase.rpc('admin_metrics');
+        const { data: result, error } = await supabase.rpc('admin_metrics', { p_period: period });
         if (error) throw error;
         setData(result);
       } catch (error) {
@@ -29,7 +31,7 @@ const AdminDashboard = () => {
     };
     
     fetchMetrics();
-  }, [addToast]);
+  }, [addToast, period]);
 
   const formatCurrency = (val) => {
     return Number(val || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -117,18 +119,28 @@ const AdminDashboard = () => {
     { name: 'Falhas', value: kpis.activations.cancelled + kpis.activations.expired, color: '#ef4444' }
   ];
 
+  const periodLabel = period === 'semana' ? '(7 dias)' : period === 'mes' ? '(Mês)' : '(Total)';
+  const chartDaysLabel = period === 'semana' ? 'Últimos 7 dias' : period === 'mes' ? 'Últimos 30 dias' : 'Todo Período (Últimos 90 dias)';
+
   return (
     <div className="admin-dashboard fade-in">
-      <div className="page-header">
-        <h1 className="page-title">Dashboard Analítico</h1>
-        <p className="text-muted">Desempenho financeiro e operacional em tempo real.</p>
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h1 className="page-title">Dashboard Analítico</h1>
+          <p className="text-muted">Desempenho financeiro e operacional filtrado.</p>
+        </div>
+        <div className="period-selector">
+          <button className={`period-btn ${period === 'semana' ? 'active' : ''}`} onClick={() => setPeriod('semana')}>Semana</button>
+          <button className={`period-btn ${period === 'mes' ? 'active' : ''}`} onClick={() => setPeriod('mes')}>Mês</button>
+          <button className={`period-btn ${period === 'total' ? 'active' : ''}`} onClick={() => setPeriod('total')}>Total</button>
+        </div>
       </div>
 
       {/* 1. HERO KPIs */}
       <div className="metrics-grid">
         <div className="metric-card">
           <div className="metric-header">
-            <span className="metric-title">Lucro Líquido (Mês)</span>
+            <span className="metric-title">Lucro Líquido {periodLabel}</span>
             <div className="metric-icon"><TrendingUp size={20} /></div>
           </div>
           <div className="metric-value">
@@ -188,7 +200,7 @@ const AdminDashboard = () => {
 
         <div className="metric-card">
           <div className="metric-header">
-            <span className="metric-title">Volume Pix (Mês)</span>
+            <span className="metric-title">Volume Pix {periodLabel}</span>
             <div className="metric-icon"><DollarSign size={20} /></div>
           </div>
           <div className="metric-value">
@@ -229,12 +241,18 @@ const AdminDashboard = () => {
           <span className="sec-kpi-title">Serviços Ativos</span>
           <span className="sec-kpi-val">{kpis.secondary.activeServices}</span>
         </div>
+        {kpis.secondary.dddProbes !== undefined && (
+          <div className="sec-kpi-card" style={{ opacity: 0.7 }}>
+            <span className="sec-kpi-title" title="Sondas de disponibilidade interna. Não afetam métricas de negócio.">Sondas DDD (Ocultas)</span>
+            <span className="sec-kpi-val">{kpis.secondary.dddProbes}</span>
+          </div>
+        )}
       </div>
 
       {/* 3. HERO CHARTS */}
       <div className="charts-grid">
         <div className="chart-card">
-          <h3 className="chart-title">Receita vs Lucro (Últimos 30 dias)</h3>
+          <h3 className="chart-title">Receita vs Lucro ({chartDaysLabel})</h3>
           <div style={{ width: '100%', height: '300px' }}>
             <ResponsiveContainer>
               <AreaChart data={daily} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>

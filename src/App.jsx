@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
@@ -19,6 +20,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminServices from './pages/admin/AdminServices';
 import AdminProviders from './pages/admin/AdminProviders';
+import AdminSupport from './pages/admin/AdminSupport';
 import Maintenance from './pages/Maintenance';
 
 const Placeholder = ({ title }) => (
@@ -26,8 +28,8 @@ const Placeholder = ({ title }) => (
 );
 
 function App() {
-  // Define se o modo de manutenção está ativo (mude para false amanhã às 13h para desativar)
-  const isMaintenance = window.location.hostname !== 'localhost' && !window.location.hostname.startsWith('192.168');
+  // Manutenção desativada
+  const isMaintenance = false;
 
   if (isMaintenance) {
     return <Maintenance />;
@@ -35,10 +37,11 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <ToastProvider>
-        <AuthProvider>
-          <BrowserRouter>
-            <Routes>
+      <ThemeProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <BrowserRouter>
+              <Routes>
               {/* Public Routes */}
               <Route path="/" element={<LandingPage />} />
               
@@ -67,6 +70,7 @@ function App() {
                   <Route path="usuarios" element={<AdminUsers />} />
                   <Route path="servicos" element={<AdminServices />} />
                   <Route path="fornecedores" element={<AdminProviders />} />
+                  <Route path="suporte" element={<AdminSupport />} />
                 </Route>
               </Route>
 
@@ -76,6 +80,7 @@ function App() {
           </BrowserRouter>
         </AuthProvider>
       </ToastProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

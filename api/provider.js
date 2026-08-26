@@ -1,15 +1,39 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
-const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
-
 const SMS24H_API_KEY = process.env.SMS24H_API_KEY;
 const NUMEROVIRTUAL_API_KEY = process.env.NUMEROVIRTUAL_API_KEY;
 
-// Service role client is still available if strictly needed for admin tasks, 
-// but we will primarily use userSupabase to respect auth.uid() in RPCs
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const adminSupabase = supabaseServiceKey ? createClient(supabaseUrl, supabaseServiceKey) : null;
+// We will initialize the admin client lazily inside the handler to prevent top-level crashes
+// if environment variables are missing during cold start on Vercel.
+let adminSupabase = null;
+
+// Rate Limit Store (In-Memory per Vercel Lambda Instance)
+const rateLimits = new Map();
+
+function checkRateLimit(key, limit, windowMs) {
+  const now = Date.now();
+  const record = rateLimits.get(key) || { count: 0, resetTime: now + windowMs };
+  
+  if (now > record.resetTime) {
+    record.count = 0;
+    record.resetTime = now + windowMs;
+  }
+  
+  record.count++;
+  rateLimits.set(key, record);
+  return record.count <= limit;
+}
+
+function checkPollRateLimit(activationId, windowMs = 2000) {
+  const now = Date.now();
+  const key = `poll:${activationId}`;
+  const lastPoll = rateLimits.get(key) || 0;
+  
+  if (now - lastPoll < windowMs) return false;
+  rateLimits.set(key, now);
+  return true;
+}
+
 
 /**
  * Adapter Interface:
@@ -30,11 +54,18 @@ const Sms24hAdapter = {
     return await res.text();
   },
 
-  async buyNumber(offer) {
-    const text = await this.request({ action: 'getNumber', service: offer.provider_service_code, country: '73', operator: 'any' });
+  async buyNumber(offer, ddd) {
+    const params = { action: 'getNumber', service: offer.provider_service_code, country: '73', operator: 'any' };
+    if (ddd && ddd !== 'Qualquer') {
+      params.ddd = ddd;
+    }
+    const text = await this.request(params);
     if (text.startsWith('ACCESS_NUMBER')) {
       const parts = text.split(':');
       return { providerActivationId: parts[1], phone: '+' + parts[2] };
+    }
+    if (text === 'NO_NUMBERS') {
+      throw new Error('NO_NUMBERS');
     }
     throw new Error(`SMS24H Error: ${text}`);
   },
@@ -230,9 +261,13 @@ const ADAPTERS = {
 };
 
 export default async function handler(req, res) {
-  // CORS for local dev
+  // CORS for local dev and production
   res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin;
+  const allowedOrigins = ['http://localhost:5173', 'https://painelsms2.vercel.app']; // Adjust production URL as needed
+  if (allowedOrigins.includes(origin) || !origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  }
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
 
@@ -245,7 +280,16 @@ export default async function handler(req, res) {
     const authHeader = req.headers.authorization;
     if (!authHeader) throw new Error("Missing Authorization header");
     
-    const token = authHeader.replace('Bearer ', '');
+    const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+    const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (!adminSupabase && supabaseServiceKey && supabaseUrl) {
+      adminSupabase = createClient(supabaseUrl, supabaseServiceKey);
+    }
+
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) throw new Error("Unauthorized");
     
     // Create a client acting on behalf of the user to preserve auth.uid() in RPCs
     const userSupabase = createClient(supabaseUrl, supabaseAnonKey, {
@@ -258,8 +302,20 @@ export default async function handler(req, res) {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const { action } = body;
 
+    const validActions = ['buyNumber', 'probeDdd', 'checkSms', 'cancel', 'listServices', 'getBalance', 'verifyPayment', 'createPixCharge'];
+    if (!validActions.includes(action)) {
+      return res.status(400).json({ success: false, error: "Invalid action" });
+    }
+
+    // IP for rate limiting
+    const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1';
+
     if (action === 'buyNumber') {
-      const { offerId } = body;
+      if (!checkRateLimit(`${ip}:buyNumber`, 10, 60000)) {
+        return res.status(429).json({ success: false, error: "Too many requests. Please wait a minute." });
+      }
+
+      const { offerId, ddd } = body;
       
       // 1. Get offer details
       const { data: offer } = await userSupabase
@@ -270,18 +326,18 @@ export default async function handler(req, res) {
         
       if (!offer || !offer.active || !offer.provider?.active) throw new Error("Offer not available");
 
-      // 2. We use RPC to decrement stock and insert activation, returning the new row
-      // We do this BEFORE calling provider to reserve balance/stock safely?
-      // Wait, PRD: "calls adapter.buyNumber, stores the activation"
-      // If we buy first, and it fails to insert into DB, we lose money on provider.
-      // If we insert into DB first (reserve), and provider fails, we must rollback.
-      
-      // Using the RPC `purchase_number` that checks balance and stock!
-      // But we need the provider_activation_id and phone_number.
-      // So we call provider first. If user balance is 0, we shouldn't call provider.
-      
+      // Dynamic pricing for DDD
+      let finalSalePrice = offer.sale_price;
+      let finalCostPrice = offer.cost_price;
+      const isSms24h = offer.provider.key.toLowerCase() === 'sms24h' || offer.provider.key.toLowerCase() === 'laranjinha';
+
+      if (isSms24h && ddd && ddd !== 'Qualquer') {
+        finalCostPrice = finalCostPrice * 1.30;
+        finalSalePrice = finalSalePrice * 1.30; // 1.25 margin is already in the base, so * 1.30 applies to both
+      }
+
       const { data: profile } = await userSupabase.from('profiles').select('balance').eq('id', user.id).single();
-      if (!profile || profile.balance < offer.sale_price) throw new Error("Insufficient balance");
+      if (!profile || profile.balance < finalSalePrice) throw new Error("Insufficient balance");
       if (offer.stock <= 0) throw new Error("Out of stock");
 
       const adapterKey = offer.provider.key.toLowerCase();
@@ -289,13 +345,23 @@ export default async function handler(req, res) {
       if (!adapter) throw new Error(`Provider adapter for ${offer.provider.key} not found`);
 
       // Call Provider
-      const providerRes = await adapter.buyNumber(offer);
+      let providerRes;
+      try {
+        providerRes = await adapter.buyNumber(offer, ddd);
+      } catch (err) {
+        if (err.message === 'NO_NUMBERS') {
+          throw new Error("DDD não disponível para este serviço, tente outro ou 'Qualquer'");
+        }
+        throw err;
+      }
       
       // Store in DB via RPC using userSupabase so auth.uid() works
       const { data: actData, error: actError } = await userSupabase.rpc('purchase_number', {
         p_service_offer_id: offer.id,
         p_phone_number: providerRes.phone,
-        p_provider_activation_id: providerRes.providerActivationId
+        p_provider_activation_id: providerRes.providerActivationId,
+        p_sale_price: finalSalePrice,
+        p_cost_price: finalCostPrice
       });
 
       if (actError) {
@@ -304,11 +370,80 @@ export default async function handler(req, res) {
         throw actError;
       }
 
+      // Organic Learn: Mark DDD as available if it succeeded
+      if (isSms24h && ddd && ddd !== 'Qualquer') {
+        const dbClient = adminSupabase || userSupabase;
+        await dbClient.rpc('upsert_ddd_availability', {
+          p_service_id: offer.service_id,
+          p_provider_id: offer.provider_id,
+          p_ddd: ddd,
+          p_status: 'available',
+          p_source: 'purchase'
+        }).catch(e => console.error("Error organic learning DDD:", e));
+      }
+
       return res.status(200).json({ success: true, activation: actData });
+    }
+
+    if (action === 'probeDdd') {
+      if (!checkRateLimit('global:probeDdd', 1, 1000)) {
+        return res.status(429).json({ success: false, error: "Global probe limit reached. Try again later." });
+      }
+
+      const { data: profile } = await userSupabase.from('profiles').select('role').eq('id', user.id).single();
+      if (profile?.role !== 'admin') throw new Error("Unauthorized");
+
+      const { offerId, ddd } = body;
+      
+      const { data: offer } = await userSupabase
+        .from('service_offers')
+        .select('*, provider:providers(*)')
+        .eq('id', offerId)
+        .single();
+        
+      if (!offer || !offer.provider) throw new Error("Offer not available");
+
+      const adapterKey = offer.provider.key.toLowerCase();
+      const adapter = ADAPTERS[adapterKey];
+      if (!adapter) throw new Error(`Provider adapter not found`);
+
+      try {
+        const providerRes = await adapter.buyNumber(offer, ddd);
+        // It worked! Cancel immediately so there is no cost.
+        await adapter.cancel(providerRes.providerActivationId).catch(console.error);
+        
+        const dbClient = adminSupabase || userSupabase;
+        await dbClient.rpc('upsert_ddd_availability', {
+          p_service_id: offer.service_id,
+          p_provider_id: offer.provider_id,
+          p_ddd: ddd,
+          p_status: 'available',
+          p_source: 'probe'
+        });
+        
+        return res.status(200).json({ success: true, status: 'available' });
+      } catch (err) {
+        if (err.message === 'NO_NUMBERS') {
+          const dbClient = adminSupabase || userSupabase;
+          await dbClient.rpc('upsert_ddd_availability', {
+            p_service_id: offer.service_id,
+            p_provider_id: offer.provider_id,
+            p_ddd: ddd,
+            p_status: 'unavailable',
+            p_source: 'probe'
+          });
+          return res.status(200).json({ success: true, status: 'unavailable' });
+        }
+        throw err;
+      }
     }
 
     if (action === 'checkSms') {
       const { activationId } = body;
+      
+      if (!checkPollRateLimit(activationId, 2000)) {
+        return res.status(200).json({ success: true, status: 'waiting' }); // Ignore too fast polls
+      }
       
       // Get activation
       const { data: activation } = await userSupabase
@@ -397,6 +532,122 @@ export default async function handler(req, res) {
 
       const balance = await adapter.getBalance();
       return res.status(200).json({ success: true, balance });
+    }
+
+    if (action === 'verifyPayment') {
+      const { chargeId } = body;
+      if (!chargeId) throw new Error("Missing chargeId");
+
+      const laranjinhaKey = process.env.LARANJINHA_API_KEY || process.env.VITE_LARANJINHA_API_KEY;
+      if (!laranjinhaKey) throw new Error("Payment gateway key missing");
+
+      // Rate limit to prevent spamming
+      if (!checkRateLimit(`${ip}:verifyPayment`, 10, 60000)) {
+        return res.status(429).json({ success: false, error: "Too many requests" });
+      }
+
+      const response = await fetch(`https://mqvdjjbkjglaimbnpcer.supabase.co/functions/v1/api-proxy/charges/${chargeId}`, {
+        method: 'GET',
+        headers: { 'X-API-Key': laranjinhaKey }
+      });
+      
+      if (!response.ok) throw new Error("Failed to verify payment status");
+      const result = await response.json();
+      const charge = result.charge || result;
+      
+      if (charge.status === 'paid') {
+         // Securely add balance bypassing RLS since we verified server-side
+         if (!adminSupabase) throw new Error("Admin Supabase client not initialized (missing keys)");
+         
+         const { error } = await adminSupabase.rpc('add_balance', { p_transaction_id: chargeId });
+         if (error) {
+           console.error("verifyPayment add_balance error:", error);
+           return res.status(200).json({ success: true, status: 'completed' }); 
+         }
+         return res.status(200).json({ success: true, status: 'completed' });
+      }
+      
+      return res.status(200).json({ success: true, status: charge.status });
+    }
+
+    if (action === 'createPixCharge') {
+      const { baseAmount, totalAmount } = body;
+      if (!baseAmount || !totalAmount) throw new Error("Missing amount");
+
+      const laranjinhaKey = process.env.LARANJINHA_API_KEY || process.env.VITE_LARANJINHA_API_KEY;
+      if (!laranjinhaKey) throw new Error("Payment gateway key missing");
+
+      if (!checkRateLimit(`${ip}:createPixCharge`, 5, 60000)) {
+        return res.status(429).json({ success: false, error: "Too many Pix creation requests" });
+      }
+
+      // Ensure no more than 3 pending transactions (Double check server-side in addition to the DB trigger)
+      const { count } = await userSupabase
+        .from('transactions')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('type', 'recharge')
+        .eq('status', 'pending');
+        
+      if (count >= 3) {
+        throw new Error("Você já possui 3 recargas Pix pendentes. Conclua ou aguarde expirarem antes de gerar novas.");
+      }
+
+      const laranjinhaRes = await fetch('https://mqvdjjbkjglaimbnpcer.supabase.co/functions/v1/api-proxy/charges', {
+        method: 'POST',
+        headers: {
+          'X-API-Key': laranjinhaKey,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          amount_cents: Math.round(totalAmount * 100),
+          description: `Recarga Painel SMS`,
+          payer: {
+            name: user?.user_metadata?.full_name || "Cliente Painel SMS",
+            email: user?.email || "cliente@painelsms.com",
+            document: "00000000000" // CPF genérico aceito em teste
+          },
+          metadata: {
+            user_id: user.id
+          }
+        })
+      });
+
+      if (!laranjinhaRes.ok) throw new Error("Falha ao gerar cobrança com o banco (Gateway Error)");
+      
+      const result = await laranjinhaRes.json();
+      const charge = result.charge;
+
+      // Insert pending transaction using adminSupabase to bypass RLS limitations, though userSupabase works too
+      const dbClient = adminSupabase || userSupabase;
+      const { error } = await dbClient
+        .from('transactions')
+        .insert({
+          id: charge.id, 
+          user_id: user.id,
+          type: 'recharge',
+          amount: baseAmount,
+          status: 'pending',
+          method: 'pix'
+        });
+
+      if (error) {
+        console.error("Error inserting Pix charge in DB:", error);
+        throw new Error("Erro ao salvar cobrança no banco de dados");
+      }
+
+      return res.status(200).json({
+        success: true,
+        charge: {
+          id: charge.id,
+          qrCode: charge.qr_code_image,
+          pixCode: charge.qr_code,
+          expiresAt: new Date(charge.expires_at).getTime(),
+          amount: baseAmount,
+          totalAmount: totalAmount,
+          status: 'pending'
+        }
+      });
     }
 
     throw new Error("Unknown action");

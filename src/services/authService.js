@@ -1,10 +1,13 @@
 import { supabase } from '../lib/supabase'
 
 export const authService = {
-  async login(email, password) {
+  async login(email, password, captchaToken = null) {
+    const options = {};
+    if (captchaToken) options.captchaToken = captchaToken;
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
+      options
     });
 
     if (error) {
@@ -16,15 +19,18 @@ export const authService = {
     return this.getSession();
   },
 
-  async register(name, email, password) {
+  async register(name, email, password, captchaToken = null) {
+    const options = {
+      data: {
+        full_name: name,
+      }
+    };
+    if (captchaToken) options.captchaToken = captchaToken;
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: {
-          full_name: name,
-        }
-      }
+      options
     });
 
     if (error) {

@@ -1,13 +1,115 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import { numberProviderService } from '../../services/numberProviderService';
 import { historyService } from '../../services/historyService';
 import Skeleton from '../../components/ui/Skeleton';
-import { Search, Loader2, Signal, AlertCircle, PlusCircle, LayoutGrid, Users, ShoppingCart, Landmark, Bike, Car, Dices, MessageSquare } from 'lucide-react';
+import { Search, Loader2, Signal, AlertCircle, PlusCircle, LayoutGrid, Users, ShoppingCart, Landmark, Bike, Car, Dices, MessageSquare, ChevronDown, LayoutDashboard, Star, Package } from 'lucide-react';
 import { ServiceIcon } from '../../components/ServiceIcon';
 import './Servicos.css';
+
+const ServiceCardItem = React.memo(({ 
+  service, index, userBalance, favorites, handleToggleFavorite, selectedDDD, handleDDDChange, handlePurchase, isPurchasing, purchasingId 
+}) => {
+  const hasAnyOffer = service.offers && service.offers.length > 0;
+  
+  return (
+    <div className={`service-card ${!hasAnyOffer ? 'disabled' : ''}`} style={{ '--anim-order': index }}>
+      <div className="service-card-left">
+        <div className="service-icon-wrapper">
+          <ServiceIcon service={service} />
+        </div>
+        
+        <div className="service-details">
+          <h3 className="service-title" title={service.name}>{service.name}</h3>
+        </div>
+        <button 
+          className={`favorite-toggle ${favorites.has(service.id) ? 'active' : ''}`}
+          onClick={(e) => handleToggleFavorite(e, service.id)}
+          title={favorites.has(service.id) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+        >
+          <Star 
+            size={20} 
+            fill={favorites.has(service.id) ? 'var(--primary-color)' : 'none'} 
+            color={favorites.has(service.id) ? 'var(--primary-color)' : 'var(--text-muted)'} 
+          />
+        </button>
+      </div>
+      
+      <div className="service-action">
+        {!hasAnyOffer ? (
+          <div className="service-hint error">Serviço temporariamente indisponível</div>
+        ) : (
+          service.offers.map((offer) => {
+            const isSms24h = offer.provider.name.toLowerCase().includes('sms24h') || offer.provider.key?.toLowerCase() === 'sms24h' || offer.provider.name.toLowerCase() === 'laranjinha';
+            const currentDDD = selectedDDD || 'Qualquer';
+            
+            let displayPrice = Number(offer.sale_price);
+            if (isSms24h && currentDDD !== 'Qualquer') {
+              displayPrice = displayPrice * 1.30;
+            }
+
+            const canAfford = userBalance >= displayPrice;
+            const hasStock = offer.stock > 0;
+            const isThisLoading = isPurchasing && purchasingId === `${service.id}-${offer.id}`;
+            
+            const availableDDDs = (service.ddd_availability || [])
+              .filter(d => d.provider_id === offer.provider_id && d.status === 'available')
+              .map(d => parseInt(d.ddd, 10))
+              .sort((a, b) => a - b);
+            const hasKnownDDDs = availableDDDs.length > 0;
+            
+            return (
+              <div className="provider-offer-row-wrapper" key={offer.id} style={{ opacity: (!hasStock || !canAfford) ? 0.6 : 1 }}>
+                <div className="provider-offer-row">
+                  <div className="provider-action-col">
+                    <span className="offer-price">R$ {displayPrice.toFixed(2)}</span>
+                    <button 
+                      className="btn btn-buy-gradient" 
+                      disabled={!canAfford || !hasStock || isPurchasing}
+                      onClick={() => handlePurchase(service, offer)}
+                      title={!canAfford ? "Saldo insuficiente" : !hasStock ? "Esgotado" : "Comprar número"}
+                    >
+                      {isThisLoading ? <Loader2 size={16} className="spin" /> : <ShoppingCart size={16} />}
+                    </button>
+                  </div>
+                </div>
+                {hasStock ? (
+                  <div className="offer-stock badge-available">
+                    <Package size={12} />
+                    <span>{offer.stock.toLocaleString('pt-BR')} disponíveis</span>
+                  </div>
+                ) : (
+                  <div className="offer-stock badge-unavailable">
+                    <AlertCircle size={12} />
+                    <span>Indisponível</span>
+                  </div>
+                )}
+                
+                {isSms24h && hasStock && hasKnownDDDs && (
+                  <div className="ddd-selector-row" style={{ marginTop: '0.75rem', padding: '0.5rem', background: 'var(--bg-alt)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)' }}>Selecionar DDD:</span>
+                    <select 
+                      value={currentDDD}
+                      onChange={(e) => handleDDDChange(service.id, e.target.value)}
+                      style={{ padding: '0.25rem 0.5rem', borderRadius: '6px', border: '1px solid var(--border-color)', fontSize: '0.8rem', background: 'white' }}
+                    >
+                      <option value="Qualquer">Qualquer (Sem taxa)</option>
+                      {availableDDDs.map(d => (
+                        <option key={d} value={d}>{d} (+30%)</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+});
 
 const Servicos = () => {
   const { user, updateBalance } = useAuth();
@@ -19,12 +121,21 @@ const Servicos = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('Todos');
   const [isLoadingServices, setIsLoadingServices] = useState(true);
+  const [favorites, setFavorites] = useState(new Set());
   
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [purchasingId, setPurchasingId] = useState(null);
+  
+  // DDD Selection: { [serviceId]: dddString }
+  const [selectedDDDs, setSelectedDDDs] = useState({});
+
+  const handleDDDChange = (serviceId, ddd) => {
+    setSelectedDDDs(prev => ({ ...prev, [serviceId]: ddd }));
+  };
 
   const categories = [
     { id: 'Todos', label: 'Todos', icon: LayoutGrid },
+    { id: 'Favoritos', label: 'Favoritos', icon: Star },
     { id: 'Rede Social', label: 'Rede Social', icon: Users },
     { id: 'E-commerce', label: 'E-commerce', icon: ShoppingCart },
     { id: 'Banco', label: 'Banco', icon: Landmark },
@@ -49,8 +160,12 @@ const Servicos = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const data = await numberProviderService.getAvailableServices();
-        setServices(data);
+        const [servicesData, favData] = await Promise.all([
+          numberProviderService.getAvailableServices(),
+          user ? numberProviderService.getFavorites(user.id) : Promise.resolve(new Set())
+        ]);
+        setServices(servicesData);
+        setFavorites(favData);
       } catch (error) {
         addToast('Falha ao carregar serviços.', 'error');
       } finally {
@@ -58,7 +173,7 @@ const Servicos = () => {
       }
     };
     fetchServices();
-  }, [addToast]);
+  }, [addToast, user]);
 
   const handlePurchase = async (service, offer) => {
     const userBalance = user?.balance || 0;
@@ -77,10 +192,15 @@ const Servicos = () => {
     setPurchasingId(`${service.id}-${offer.id}`);
 
     try {
-      const res = await numberProviderService.purchaseNumber(offer, service.id);
+      const isSms24h = offer.provider.name.toLowerCase().includes('sms24h') || offer.provider.key?.toLowerCase() === 'sms24h' || offer.provider.name.toLowerCase() === 'laranjinha';
+      const selectedDDD = isSms24h ? (selectedDDDs[service.id] || 'Qualquer') : 'Qualquer';
+
+      const res = await numberProviderService.purchaseNumber(offer, service.id, selectedDDD);
       
       // Deduct balance from user context immediately
-      updateBalance(user.balance - offer.sale_price);
+      let finalPrice = Number(offer.sale_price);
+      if (isSms24h && selectedDDD !== 'Qualquer') finalPrice *= 1.30;
+      updateBalance(user.balance - finalPrice);
 
       historyService.addActivation(user.id, {
         serviceId: service.id,
@@ -102,53 +222,87 @@ const Servicos = () => {
     }
   };
 
-  const filteredServices = services.filter(s => {
-    const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = activeCategory === 'Todos' || categorizeService(s.name) === activeCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const handleToggleFavorite = useCallback(async (e, serviceId) => {
+    e.stopPropagation();
+    try {
+      const isCurrentlyFavorited = favorites.has(serviceId);
+      const isNowFavorited = await numberProviderService.toggleFavorite(user.id, serviceId, isCurrentlyFavorited);
+      
+      setFavorites(prev => {
+        const next = new Set(prev);
+        if (isNowFavorited) {
+          next.add(serviceId);
+        } else {
+          next.delete(serviceId);
+        }
+        return next;
+      });
+    } catch (err) {
+      console.error(err);
+      addToast("Erro ao atualizar favoritos", "error");
+    }
+  }, [user, favorites, addToast]);
+
+  const filteredServices = useMemo(() => {
+    return services
+      .filter(s => {
+        const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = activeCategory === 'Todos' || 
+                                (activeCategory === 'Favoritos' ? favorites.has(s.id) : categorizeService(s.name) === activeCategory);
+        return matchesSearch && matchesCategory;
+      })
+      .sort((a, b) => {
+        // Sort favorites first
+        const aFav = favorites.has(a.id);
+        const bFav = favorites.has(b.id);
+        if (aFav && !bFav) return -1;
+        if (!aFav && bFav) return 1;
+        return 0;
+      });
+  }, [services, searchTerm, activeCategory, favorites]);
 
   return (
-    <div className="servicos-page">
-      <div className="calm-bg"></div>
-      <div className="floating-bubbles">
-        <MessageSquare className="bubble bubble-1" size={48} />
-        <MessageSquare className="bubble bubble-2" size={32} />
-        <MessageSquare className="bubble bubble-3" size={64} />
-      </div>
-
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Serviços</h1>
-          <p className="text-muted">Selecione o serviço para o qual deseja receber o SMS.</p>
-        </div>
+    <div className="servicos-page page-transition">
+      <div className="servicos-header-wrapper fade-in">
         
-        <div className="search-box">
-          <Search size={20} className="search-icon" />
-          <input 
-            type="text" 
-            placeholder="Buscar aplicativo..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
+        {/* Row 2: Search */}
+        <div className="sh-row-2">
+          <div className="search-box full-width">
+            <Search size={20} className="search-icon" />
+            <input 
+              type="text" 
+              placeholder="Busque por nome do app, site ou serviço..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
         </div>
-      </div>
 
-      <div className="category-filters fade-in">
-        {categories.map(cat => {
-          const Icon = cat.icon;
-          return (
-            <button 
-              key={cat.id} 
-              className={`category-pill ${activeCategory === cat.id ? 'active' : ''}`}
-              onClick={() => setActiveCategory(cat.id)}
-            >
-              <Icon size={16} />
-              {cat.label}
-            </button>
-          );
-        })}
+        <div className="sh-row-3-wrapper">
+        <div className="category-filters-container">
+          <div className="category-filters">
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+              return (
+                <button 
+                  key={cat.id} 
+                  className={`category-pill ${activeCategory === cat.id ? 'active' : ''}`}
+                  onClick={() => setActiveCategory(cat.id)}
+                >
+                  <Icon size={16} /> {cat.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>   {/* Row 4: Count */}
+        <div className="sh-row-4">
+          <div className="service-count">
+            <Signal size={14} className="text-muted" />
+            <span>{filteredServices.length} de {services.length} serviços</span>
+          </div>
+        </div>
       </div>
 
       {(user?.balance || 0) < 1.50 && (
@@ -180,77 +334,34 @@ const Servicos = () => {
             </div>
           ))
         ) : filteredServices.length > 0 ? (
-          filteredServices.map((service, index) => {
-            const userBalance = user?.balance || 0;
-            const hasAnyOffer = service.offers && service.offers.length > 0;
-            const fromPrice = hasAnyOffer ? service.offers[0].sale_price : 0;
-            
-            return (
-              <div key={service.id} className={`service-card ${!hasAnyOffer ? 'disabled' : ''}`} style={{ '--anim-order': index }}>
-                <div className="service-card-header">
-                  <div className="service-icon-wrapper">
-                    <ServiceIcon service={service} />
-                  </div>
-                  <div className="service-price">
-                    {hasAnyOffer ? `a partir de R$ ${Number(fromPrice).toFixed(2)}` : 'Indisponível'}
-                  </div>
-                </div>
-                
-                <div className="service-details">
-                  <h3 className="service-title">{service.name}</h3>
-                  <div className="service-meta">
-                    <span className="service-country">{service.country}</span>
-                  </div>
-                </div>
-                
-                <div className="service-action" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: 'auto' }}>
-                  {!hasAnyOffer ? (
-                    <div className="service-hint error">Serviço temporariamente indisponível</div>
-                  ) : (
-                    service.offers.map((offer) => {
-                      const canAfford = userBalance >= offer.sale_price;
-                      const hasStock = offer.stock > 0;
-                      const isThisLoading = isPurchasing && purchasingId === `${service.id}-${offer.id}`;
-                      
-                      return (
-                          <div className="provider-offer-row" key={offer.id} style={{ opacity: (!hasStock || !canAfford) ? 0.6 : 1 }}>
-                            <div className="provider-info-col">
-                              {offer.provider.logo_key && (
-                                <img src={`/${offer.provider.logo_key}`} alt={offer.provider.name} className="provider-logo" onError={(e) => e.target.style.display = 'none'} />
-                              )}
-                              <div className="provider-texts">
-                                <span className="provider-name">{offer.provider.name}</span>
-                                <span className={`provider-stock ${hasStock ? 'stock-ok' : 'stock-out'}`}>
-                                  {hasStock ? `${offer.stock} unid.` : 'Esgotado'}
-                                </span>
-                              </div>
-                            </div>
-                            
-                            <div className="provider-action-col">
-                            <span className="offer-price">R$ {Number(offer.sale_price).toFixed(2)}</span>
-                            <button 
-                              className="btn btn-buy-gradient" 
-                              disabled={!canAfford || !hasStock || isPurchasing}
-                              onClick={() => handlePurchase(service, offer)}
-                              title={!canAfford ? "Saldo insuficiente" : !hasStock ? "Esgotado" : "Comprar número"}
-                            >
-                              {isThisLoading ? <Loader2 size={16} className="spin" /> : '+'}
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
-              </div>
-            );
-          })
+          filteredServices.map((service, index) => (
+            <ServiceCardItem 
+              key={service.id}
+              service={service}
+              index={index}
+              userBalance={user?.balance || 0}
+              favorites={favorites}
+              handleToggleFavorite={handleToggleFavorite}
+              selectedDDD={selectedDDDs[service.id]}
+              handleDDDChange={handleDDDChange}
+              handlePurchase={handlePurchase}
+              isPurchasing={isPurchasing}
+              purchasingId={purchasingId}
+            />
+          ))
+        ) : activeCategory === 'Favoritos' && searchTerm === '' ? (
+          <div className="empty-state full-width">
+            <Star size={48} className="empty-icon text-muted mb-4" />
+            <h3>Você ainda não favoritou nenhum serviço</h3>
+            <p className="text-muted">Toque na estrela ao lado do nome do serviço para adicioná-lo aos seus favoritos.</p>
+            <button className="btn btn-outline mt-4" onClick={() => setActiveCategory('Todos')}>Ver todos os serviços</button>
+          </div>
         ) : (
           <div className="empty-state full-width">
             <Search size={48} className="empty-icon text-muted mb-4" />
             <h3>Nenhum serviço encontrado</h3>
-            <p className="text-muted">Não encontramos resultados para "{searchTerm}".</p>
-            <button className="btn btn-outline mt-4" onClick={() => setSearchTerm('')}>Limpar busca</button>
+            <p className="text-muted">Não encontramos resultados para a sua busca.</p>
+            <button className="btn btn-outline mt-4" onClick={() => { setSearchTerm(''); setActiveCategory('Todos'); }}>Limpar filtros</button>
           </div>
         )}
       </div>

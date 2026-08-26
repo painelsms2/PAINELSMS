@@ -114,19 +114,11 @@ const AdminProviders = () => {
             active: false
           };
           
-          if (newCount < 5) console.log(`[SYNC_MATCH] No match for ${svc.providerServiceCode}. Created new service with ID: ${newSvc.id}`);
-          newCount++;
-
           const { error: insertSvcErr } = await supabase.from('services').insert([newSvc]);
           if (!insertSvcErr) {
             ourServices.push(newSvc);
             localSvc = newSvc;
-          } else {
-            console.error("Failed to create new service for", svc.providerServiceCode, insertSvcErr);
           }
-        } else {
-          if (matchCount < 5) console.log(`[SYNC_MATCH] Matched ${svc.providerServiceCode} to existing service ID: ${localSvc.id}`);
-          matchCount++;
         }
 
         if (localSvc) {
