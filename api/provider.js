@@ -352,6 +352,12 @@ export default async function handler(req, res) {
         if (err.message === 'NO_NUMBERS') {
           throw new Error("DDD não disponível para este serviço, tente outro ou 'Qualquer'");
         }
+        if (err.message.includes('LIMITED_ACTIVATIONS')) {
+          throw new Error("Limite de números pendentes atingido. Cancele os números que não estão recebendo SMS ou aguarde alguns minutos.");
+        }
+        if (err.message.includes('NO_BALANCE')) {
+          throw new Error("Sistema temporariamente indisponível (Saldo insuficiente no fornecedor).");
+        }
         throw err;
       }
       

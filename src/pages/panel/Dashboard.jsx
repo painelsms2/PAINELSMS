@@ -22,6 +22,7 @@ const iconMap = {
 };
 
 import { ActiveCard } from '../../components/ActiveCard';
+import { AutoCancelPopup } from '../../components/AutoCancelPopup';
 
 // ==========================================
 // MAIN DASHBOARD COMPONENT
@@ -34,6 +35,7 @@ const Dashboard = () => {
   const [activeActivations, setActiveActivations] = useState([]);
   const [historyItems, setHistoryItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [autoCancelledService, setAutoCancelledService] = useState(null);
 
   // Tabs logic
   const [activeTab, setActiveTab] = useState('historico');
@@ -91,6 +93,9 @@ const Dashboard = () => {
       status: finalStatus,
       cancelledAt: Date.now()
     });
+    if (finalStatus === 'expired') {
+      setAutoCancelledService(activation.service.name);
+    }
     setTimeout(() => { loadData(); }, 500);
   };
 
@@ -475,6 +480,13 @@ const Dashboard = () => {
         )}
         </div>
         </>
+      )}
+
+      {autoCancelledService && (
+        <AutoCancelPopup
+          serviceName={autoCancelledService}
+          onClose={() => setAutoCancelledService(null)}
+        />
       )}
     </div>
   );

@@ -6,10 +6,14 @@ import { CountdownRing } from './CountdownRing';
 import { Copy, X, CheckCircle2 } from 'lucide-react';
 import './ActiveCard.css';
 
+// Auto-cancel fires with 1 minute left on the clock, not at full expiry —
+// gives the provider/DB refund time to settle before the 20min window closes.
+const AUTO_CANCEL_THRESHOLD = 60;
+
 export const ActiveCard = ({ activation, onComplete, onCancel }) => {
   const { addToast } = useToast();
-  const maxTime = 20 * 60; 
-  
+  const maxTime = 20 * 60;
+
   const calcRemaining = () => {
     const elapsed = Math.floor((Date.now() - activation.createdAt) / 1000);
     return Math.max(0, maxTime - elapsed);
@@ -18,18 +22,20 @@ export const ActiveCard = ({ activation, onComplete, onCancel }) => {
   const [timeLeft, setTimeLeft] = useState(calcRemaining());
   const [status, setStatus] = useState(activation.status);
   const [code, setCode] = useState(activation.code || null);
-  
+
   const timerRef = useRef(null);
   const pollRef = useRef(null);
+  const autoCancelledRef = useRef(false);
 
   useEffect(() => {
     if (status !== 'waiting') return;
 
     timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
-        if (prev <= 1) {
-          handleExpire();
-          return 0;
+        if (prev <= AUTO_CANCEL_THRESHOLD + 1 && !autoCancelledRef.current) {
+          autoCancelledRef.current = true;
+          handleAutoCancel();
+          return AUTO_CANCEL_THRESHOLD;
         }
         return prev - 1;
       });
@@ -64,12 +70,17 @@ export const ActiveCard = ({ activation, onComplete, onCancel }) => {
     onComplete(activation, receivedCode);
   };
 
-  const handleExpire = async () => {
+  const handleAutoCancel = async () => {
     clearInterval(timerRef.current);
     clearInterval(pollRef.current);
     setStatus('expired');
-    addToast('Tempo expirado.', 'error');
-    await numberProviderService.cancelNumber(activation.activationId);
+    try {
+      await numberProviderService.cancelNumber(activation.activationId);
+      addToast('Número cancelado automaticamente e saldo devolvido.', 'error');
+    } catch (error) {
+      console.error('Auto-cancel error', error);
+      addToast('Número cancelado automaticamente. Se o saldo não voltar, contate o suporte.', 'error');
+    }
     onCancel(activation, 'expired');
   };
 
