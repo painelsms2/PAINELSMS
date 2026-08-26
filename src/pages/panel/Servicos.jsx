@@ -40,80 +40,74 @@ const ServiceCardItem = React.memo(({
       <div className="service-action">
         {!hasAnyOffer ? (
           <div className="service-hint error">Serviço temporariamente indisponível</div>
-        ) : (
-          service.offers.map((offer, offerIndex) => {
-            const isSms24h = offer.provider.name.toLowerCase().includes('sms24h') || offer.provider.key?.toLowerCase() === 'sms24h' || offer.provider.name.toLowerCase() === 'laranjinha';
-            // Offers arrive pre-sorted (healthy first, then cheapest)
-            const isUnstable = offer.provider.health_status === 'unstable';
-            const isRecommended = offerIndex === 0 && !isUnstable && service.offers.length > 1;
-            const currentDDD = selectedDDD || 'Qualquer';
-            
-            let displayPrice = Number(offer.sale_price);
-            if (isSms24h && currentDDD !== 'Qualquer') {
-              displayPrice = displayPrice * 1.30;
-            }
+        ) : (() => {
+          // Offers arrive pre-sorted (healthy first, then cheapest). The panel
+          // shows only the auto-selected one — provider choice is automatic, so
+          // the customer never sees two prices for the same service.
+          const offer = service.offers[0];
+          const isSms24h = offer.provider.name.toLowerCase().includes('sms24h') || offer.provider.key?.toLowerCase() === 'sms24h' || offer.provider.name.toLowerCase() === 'laranjinha';
+          const currentDDD = selectedDDD || 'Qualquer';
 
-            const canAfford = userBalance >= displayPrice;
-            const hasStock = offer.stock > 0;
-            const isThisLoading = isPurchasing && purchasingId === `${service.id}-${offer.id}`;
-            
-            const availableDDDs = (service.ddd_availability || [])
-              .filter(d => d.provider_id === offer.provider_id && d.status === 'available')
-              .map(d => parseInt(d.ddd, 10))
-              .sort((a, b) => a - b);
-            const hasKnownDDDs = availableDDDs.length > 0;
-            
-            return (
-              <div className="provider-offer-row-wrapper" key={offer.id} style={{ opacity: (!hasStock || !canAfford) ? 0.6 : 1 }}>
-                <div className="provider-offer-row">
-                  <div className="provider-action-col">
-                    <span className="offer-price">R$ {displayPrice.toFixed(2)}</span>
-                    <button 
-                      className="btn btn-buy-gradient" 
-                      disabled={!canAfford || !hasStock || isPurchasing}
-                      onClick={() => handlePurchase(service, offer)}
-                      title={!canAfford ? "Saldo insuficiente" : !hasStock ? "Esgotado" : "Comprar número"}
-                    >
-                      {isThisLoading ? <Loader2 size={16} className="spin" /> : <ShoppingCart size={16} />}
-                    </button>
-                  </div>
+          let displayPrice = Number(offer.sale_price);
+          if (isSms24h && currentDDD !== 'Qualquer') {
+            displayPrice = displayPrice * 1.30;
+          }
+
+          const canAfford = userBalance >= displayPrice;
+          const hasStock = offer.stock > 0;
+          const isThisLoading = isPurchasing && purchasingId === `${service.id}-${offer.id}`;
+
+          const availableDDDs = (service.ddd_availability || [])
+            .filter(d => d.provider_id === offer.provider_id && d.status === 'available')
+            .map(d => parseInt(d.ddd, 10))
+            .sort((a, b) => a - b);
+          const hasKnownDDDs = availableDDDs.length > 0;
+
+          return (
+            <div className="provider-offer-row-wrapper" style={{ opacity: (!hasStock || !canAfford) ? 0.6 : 1 }}>
+              <div className="provider-offer-row">
+                <div className="provider-action-col">
+                  <span className="offer-price">R$ {displayPrice.toFixed(2)}</span>
+                  <button
+                    className="btn btn-buy-gradient"
+                    disabled={!canAfford || !hasStock || isPurchasing}
+                    onClick={() => handlePurchase(service, offer)}
+                    title={!canAfford ? "Saldo insuficiente" : !hasStock ? "Esgotado" : "Comprar número"}
+                  >
+                    {isThisLoading ? <Loader2 size={16} className="spin" /> : <ShoppingCart size={16} />}
+                  </button>
                 </div>
-                {(isRecommended || isUnstable) && (
-                  <div className={`offer-health-tag ${isUnstable ? 'unstable' : 'recommended'}`}>
-                    {isUnstable ? 'Instável no momento' : 'Recomendado'}
-                  </div>
-                )}
-                {hasStock ? (
-                  <div className="offer-stock badge-available">
-                    <Package size={12} />
-                    <span>{offer.stock.toLocaleString('pt-BR')} disponíveis</span>
-                  </div>
-                ) : (
-                  <div className="offer-stock badge-unavailable">
-                    <AlertCircle size={12} />
-                    <span>Indisponível</span>
-                  </div>
-                )}
-                
-                {isSms24h && hasStock && hasKnownDDDs && (
-                  <div className="ddd-selector-row" style={{ marginTop: '0.75rem', padding: '0.5rem', background: 'var(--bg-alt)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)' }}>Selecionar DDD:</span>
-                    <select 
-                      value={currentDDD}
-                      onChange={(e) => handleDDDChange(service.id, e.target.value)}
-                      style={{ padding: '0.25rem 0.5rem', borderRadius: '6px', border: '1px solid var(--border-color)', fontSize: '0.8rem', background: 'white' }}
-                    >
-                      <option value="Qualquer">Qualquer (Sem taxa)</option>
-                      {availableDDDs.map(d => (
-                        <option key={d} value={d}>{d} (+30%)</option>
-                      ))}
-                    </select>
-                  </div>
-                )}
               </div>
-            );
-          })
-        )}
+              {hasStock ? (
+                <div className="offer-stock badge-available">
+                  <Package size={12} />
+                  <span>{offer.stock.toLocaleString('pt-BR')} disponíveis</span>
+                </div>
+              ) : (
+                <div className="offer-stock badge-unavailable">
+                  <AlertCircle size={12} />
+                  <span>Indisponível</span>
+                </div>
+              )}
+
+              {isSms24h && hasStock && hasKnownDDDs && (
+                <div className="ddd-selector-row">
+                  <span className="ddd-selector-label">DDD</span>
+                  <select
+                    className="ddd-selector-input"
+                    value={currentDDD}
+                    onChange={(e) => handleDDDChange(service.id, e.target.value)}
+                  >
+                    <option value="Qualquer">Qualquer</option>
+                    {availableDDDs.map(d => (
+                      <option key={d} value={d}>{d} · +30%</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </div>
     </div>
   );

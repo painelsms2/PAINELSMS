@@ -341,26 +341,38 @@
 }
 
 
-/* Provider health tags — priority is computed server-side, this only labels it */
-.offer-health-tag {
-  display: inline-flex;
+/* DDD selector — compact so it never wraps and breaks the card layout */
+.ddd-selector-row {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
   margin-top: 0.5rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-full);
+  padding: 0.35rem 0.6rem;
+  background: var(--bg-alt);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+}
+
+.ddd-selector-label {
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  flex-shrink: 0;
 }
 
-.offer-health-tag.recommended {
-  background: var(--primary-light);
-  color: var(--primary-color);
-  border: 1px solid rgba(255, 107, 0, 0.25);
-}
-
-.offer-health-tag.unstable {
-  background: var(--warning-light);
-  color: var(--warning-color);
-  border: 1px solid rgba(245, 158, 11, 0.25);
+.ddd-selector-input {
+  flex: 1;
+  min-width: 0;
+  max-width: 130px;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--surface-bg);
+  color: var(--text-main);
+  font-size: 0.78rem;
+  font-family: inherit;
+  cursor: pointer;
 }
